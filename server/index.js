@@ -8,7 +8,6 @@ import securityRoute from './API/route/security/token-verification.route.js';
 dotenv.config();
 
 const app = express();
-const port = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,6 +27,6 @@ app.get('/admin', (req, res) => {
 app.use('/auth', authRoute);
 app.use('/security', securityRoute);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`);
 });
