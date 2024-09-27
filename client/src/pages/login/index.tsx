@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LogoSection from './components/bagian-logo';
-import { setTitle } from '../utiity';
+import { setTitle } from '../utility';
 import FormLogin from './components/form-login';
 
 const LoginPage: React.FC = () => {
