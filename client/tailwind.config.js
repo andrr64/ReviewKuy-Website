@@ -13,6 +13,8 @@ export default {
         poppins: ['Poppins', 'sans-serif'], 
       },
       screens: {
+        'xs': '475px',
+        // => @media (min-width: 475px) { ... }
         'tablet': '640px',
         // => @media (min-width: 640px) { ... }
         'laptop': '1024px',
