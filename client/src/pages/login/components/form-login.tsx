@@ -100,7 +100,7 @@ export default function FormLogin() {
             <div className="text-center">
                 <button
                     type="submit"
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full"
+                    className="transition duration-300 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full"
                 >
                     Login
                 </button>
