@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function FormLogin() {
     const [showPassword, setShowPassword] = useState(false); // State untuk toggle password visibility
-    
+    const minPasswordLength = 10;
+
     // React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data:FieldValues) => {
@@ -17,7 +19,7 @@ export default function FormLogin() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className='mb-10'>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email
@@ -53,7 +55,7 @@ export default function FormLogin() {
                         placeholder="Masukan password"
                         {...register("password", { 
                             required: "Password wajib diisi", 
-                            minLength: { value: 6, message: "Password minimal 6 karakter" } 
+                            minLength: { value: minPasswordLength, message: `Password minimal ${minPasswordLength} karakter` } 
                         })}
                     />
                     <button
@@ -63,16 +65,10 @@ export default function FormLogin() {
                     >
                         {showPassword ? (
                             // Icon jika password terlihat (mata terbuka)
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.39 1.097-1.03 2.09-1.866 2.896M15 12a3 3 0 01-3 3m0-3a3 3 0 01-3-3" />
-                            </svg>
+                            <FaEye/>
                         ) : (
                             // Icon jika password disembunyikan (mata tertutup)
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a10.05 10.05 0 011.877-3.126M9.86 9.86A3 3 0 1112 15a3 3 0 01-2.14-.86M15 12a3 3 0 01-3 3m0-3a3 3 0 01-3-3" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3l18 18" />
-                            </svg>
+                            <FaEyeSlash/>
                         )}
                     </button>
                 </div>
