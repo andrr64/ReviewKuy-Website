@@ -81,7 +81,7 @@ export default function FormLogin() {
 
             {/* Forgot Password and Register Links */}
             <div className="flex items-center justify-between mb-6">
-                <a href="/forgot-password" className="text-sm underline">
+                <a href="/forgot-password" className="text-sm">
                     Lupa password
                 </a>
                 <a href="/register" className="font-bold text-sm">

@@ -108,10 +108,10 @@ export default function FormRegister() {
 
             <div className="flex items-center justify-between mb-6">
                 <a href="/forgot-password" className="text-sm">
-                    Sudah punya akun? <b>Login</b>
+                    Lupa Password
                 </a>
-                <a href="/register" className="font-bold text-sm">
-                    Daftar Akun
+                <a href="/login" className="text-sm">
+                    Sudah punya akun? <b>Login</b>
                 </a>
             </div>
 
