@@ -11,10 +11,10 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="bg-red-800 flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white shadow-lg p-10 w-10/12 desktop:w-1/3">
+      <div className="bg-white shadow-lg p-5 laptop:p-10 w-9/12 rounded-md desktop:w-1/3">
         <button onClick={() => navigate(-1)} className="transition duration-300 hover:-translate-x-2 text-left text-gray-600 mb-4 flex items-center">
           <FaArrowLeft className='mr-2'/>
-          <span> Kembali </span>
+          <span className='text-sm'> Kembali </span>
         </button>
         <LogoSection/>
         <FormLogin/>
