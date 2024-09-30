@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa6';
+import { setTitle } from '../../utility';
 
 export default function FormRegister() {
     const [showPassword, setShowPassword] = useState(false); // State untuk toggle password visibility
     const minPasswordLength = 10;
     const minNameLength = 4;
+    useEffect(() => setTitle('Register'), []);
 
     // React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -30,7 +32,7 @@ export default function FormRegister() {
                 <input
                     type="text"
                     id="name"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.name ? 'border-red-500' : ''}`}
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 ${errors.name ? 'border-red-500' : ''}`}
                     placeholder="Masukan nama"
                     {...register("name", { 
                         required: "Nama wajib diisi", 
@@ -52,7 +54,7 @@ export default function FormRegister() {
                 <input
                     type="email"
                     id="email"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.email ? 'border-red-500' : ''}`}
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 ${errors.email ? 'border-red-500' : ''}`}
                     placeholder="Masukan email"
                     {...register("email", { 
                         required: "Email wajib diisi", 
@@ -78,7 +80,7 @@ export default function FormRegister() {
                     <input
                         type={showPassword ? 'text' : 'password'} // Toggle input type
                         id="password"
-                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.password ? 'border-red-500' : ''}`}
+                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 ${errors.password ? 'border-red-500' : ''}`}
                         placeholder="Masukan password"
                         {...register("password", { 
                             required: "Password wajib diisi", 
@@ -91,10 +93,8 @@ export default function FormRegister() {
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
                     >
                         {showPassword ? (
-                            // Icon jika password terlihat (mata terbuka)
                             <FaEye/>
                         ) : (
-                            // Icon jika password disembunyikan (mata tertutup)
                             <FaEyeSlash/>
                         )}
                     </button>
@@ -119,7 +119,7 @@ export default function FormRegister() {
             <div className="text-center">
                 <button
                     type="submit"
-                    className="transition duration-300 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full"
+                    className="transition duration-300 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
                 >
                     Daftar
                 </button>

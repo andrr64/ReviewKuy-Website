@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { setTitle } from '../../utility';
 
 export default function FormLogin() {
-    const [showPassword, setShowPassword] = useState(false); // State untuk toggle password visibility
+    const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
-
+    useEffect(() => setTitle('Login'), []);
+    
     // React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = (data:FieldValues) => {
-        ///TODO: handle submit
+    const onSubmit = (data: FieldValues) => {
         console.log(data);
     };
 
@@ -20,6 +21,7 @@ export default function FormLogin() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='mb-10'>
+            {/* Email Field */}
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email
@@ -27,10 +29,10 @@ export default function FormLogin() {
                 <input
                     type="email"
                     id="email"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.email ? 'border-red-500' : ''}`}
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-red-500 ${errors.email ? 'border-red-500' : ''}`}
                     placeholder="Masukan email"
-                    {...register("email", { 
-                        required: "Email wajib diisi", 
+                    {...register("email", {
+                        required: "Email wajib diisi",
                         pattern: {
                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                             message: "Format email tidak valid"
@@ -43,19 +45,21 @@ export default function FormLogin() {
                     </p>
                 )}
             </div>
+
+            {/* Password Field */}
             <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                     Password
                 </label>
                 <div className="relative">
                     <input
-                        type={showPassword ? 'text' : 'password'} // Toggle input type
+                        type={showPassword ? 'text' : 'password'}
                         id="password"
-                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors.password ? 'border-red-500' : ''}`}
+                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-red-500 ${errors.password ? 'border-red-500' : ''}`}
                         placeholder="Masukan password"
-                        {...register("password", { 
-                            required: "Password wajib diisi", 
-                            minLength: { value: minPasswordLength, message: `Password minimal ${minPasswordLength} karakter` } 
+                        {...register("password", {
+                            required: "Password wajib diisi",
+                            minLength: { value: minPasswordLength, message: `Password minimal ${minPasswordLength} karakter` }
                         })}
                     />
                     <button
@@ -64,11 +68,9 @@ export default function FormLogin() {
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
                     >
                         {showPassword ? (
-                            // Icon jika password terlihat (mata terbuka)
-                            <FaEye/>
+                            <FaEye />
                         ) : (
-                            // Icon jika password disembunyikan (mata tertutup)
-                            <FaEyeSlash/>
+                            <FaEyeSlash />
                         )}
                     </button>
                 </div>
@@ -93,7 +95,7 @@ export default function FormLogin() {
             <div className="text-center">
                 <button
                     type="submit"
-                    className="transition duration-300 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full"
+                    className="transition duration-300 bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
                 >
                     Login
                 </button>
