@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        'base': '1rem'
+      },
       backgroundImage: {
         'banner-login': "url(src/assets/background-image/banner-login.jpg)"
       },
