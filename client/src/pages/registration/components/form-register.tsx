@@ -25,7 +25,7 @@ export default function FormRegister() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='text-xs text-white'>
-            {/* Email Field */}
+            {/* Name Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">
                     Nama Pengguna
@@ -45,7 +45,7 @@ export default function FormRegister() {
                 />
 
                 {errors.email && typeof errors.email.message === 'string' && (
-                    <p className="text-red-500 text-xs italic mt-2">
+                    <p className="text-red-500  italic mt-2">
                         {errors.email.message}
                     </p>
                 )}
@@ -71,7 +71,7 @@ export default function FormRegister() {
                 />
 
                 {errors.email && typeof errors.email.message === 'string' && (
-                    <p className="text-red-500 text-xs italic mt-2">
+                    <p className="text-red-500   italic mt-2">
                         {errors.email.message}
                     </p>
                 )}
@@ -106,7 +106,7 @@ export default function FormRegister() {
                     </button>
                 </div>
                 {errors.password && typeof errors.password.message === 'string' && (
-                    <p className="text-red-500 text-xs italic mt-2">
+                    <p className="text-red-500   italic mt-2">
                         {errors.password.message}
                     </p>
                 )}
@@ -141,21 +141,21 @@ export default function FormRegister() {
                     </button>
                 </div>
                 {errors.password && typeof errors.password.message === 'string' && (
-                    <p className="text-red-500 text-xs italic mt-2">
+                    <p className="text-red-500   italic mt-2">
                         {errors.password.message}
                     </p>
                 )}
+                {/* Forgot Password and Register Links */}
+                <div className="flex mt-2 flex-col space-y-2 tablet:flex-row tablet:space-y-0 items-center justify-between mb-6">
+                    <a href="/forgot-password" >
+                        Lupa password
+                    </a>
+                    <a href="/login">
+                        Sudah memiliki akun? <b>Login</b>
+                    </a>
+                </div>
             </div>
 
-            {/* Forgot Password and Register Links */}
-            <div className="flex items-center justify-between mb-6">
-                <a href="/forgot-password" >
-                    Lupa password
-                </a>
-                <a href="/login">
-                    Sudah memiliki akun? <b>Login</b>
-                </a>
-            </div>
 
             {/* Login Button */}
             <div className="text-white text-center">
@@ -165,7 +165,7 @@ export default function FormRegister() {
                 >
                     Daftar
                 </button>
-                <p className='opacity-90 my-2 text-xs'>atau</p>
+                <p className='opacity-90 my-2  '>atau</p>
                 <button
                     type="submit"
                     className="rounded-full transition duration-300 bg-field hover:bg-active-field py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
@@ -173,7 +173,7 @@ export default function FormRegister() {
                     <div className='flex justify-center space-x-2 items-center'>
                         <img className='h-5' src={GoogleLogo} alt="Google Logo" />
                         <p>Daftar dengan Google</p>
-                    </div>  
+                    </div>
                 </button>
             </div>
         </form>
