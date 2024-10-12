@@ -21,7 +21,7 @@ export default function FormLogin() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='text-xs text-white mb-10'>
+        <form onSubmit={handleSubmit(onSubmit)} className='text-white text-xs mb-10'>
             {/* Email Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">
@@ -81,18 +81,19 @@ export default function FormLogin() {
                         {errors.password.message}
                     </p>
                 )}
+                {/* Forgot Password and Register Links */}
+                <div className="mt-2 flex items-center flex-col space-y-1 tablet:flex-row tablet:space-y-0 justify-between mb-6">
+                    <a href="/forgot-password" >
+                        Lupa password
+                    </a>
+                    <a href="/register">
+                        Daftar Akun
+                    </a>
+                </div>
             </div>
 
 
-            {/* Forgot Password and Register Links */}
-            <div className="flex items-center justify-between mb-6">
-                <a href="/forgot-password" >
-                    Lupa password
-                </a>
-                <a href="/register">
-                    Daftar Akun
-                </a>
-            </div>
+
 
             {/* Login Button */}
             <div className="text-white text-center">
