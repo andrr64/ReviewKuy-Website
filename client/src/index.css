@@ -20,3 +20,7 @@
 .transition-300{
     @apply transition duration-300
 }
+
+.title {
+    @apply text-xl font-bold
+}
