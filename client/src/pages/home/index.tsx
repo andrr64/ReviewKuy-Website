@@ -1,9 +1,11 @@
-import Footer from '../../components/footer'
+import Jumbotron from "./components/jumbotron";
 
 export default function Home() {
   return (
-    <div>
-        <Footer/>
+    <div className='mx-40'>
+      <header>
+        <Jumbotron/>
+      </header>
     </div>
   )
 }
