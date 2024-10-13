@@ -10,7 +10,7 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   
   return (
-    <div className='bg-light-purple flex items-center justify-center min-h-screen'>
+    <div className='bg-semilight-purple flex items-center justify-center min-h-screen'>
       <div className="bg-primary shadow-lg p-5 laptop:p-10 rounded-2xl">
         <button onClick={() => navigate(-1)} className="text-sm text-white opacity-90 transition duration-300 hover:-translate-x-2 text-left text-gray-600 mb-4 flex items-center">
           <FaArrowLeft className='mr-2'/>

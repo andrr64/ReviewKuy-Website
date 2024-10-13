@@ -28,7 +28,8 @@ export default {
       backgroundColor: {
         'primary': '#2B2738',
         'button-purple': '#4F4472',
-        'light-purple': '#605B72',
+        'semilight-purple': '#605B72',
+        'light-purple': '#F0ECFF',
         'field': '#403D4C',
         'active-field': '#67627E'
       },
