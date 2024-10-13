@@ -8,7 +8,7 @@ export default function LogoSection() {
       </a>
       <div className="text-white text-center laptop:text-left">
         <h1 className="text-xl laptop:text-2xl mb-1 font-bold">Buat Akun</h1>
-        <p className="text-xs opacity-90">Silahkan masukan data anda yang diperlukan.</p>
+        <p className="opacity-90">Silahkan masukan data anda yang diperlukan.</p>
       </div>
     </div>
   )

@@ -21,7 +21,7 @@ export default function FormLogin() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='text-white text-xs mb-10'>
+        <form onSubmit={handleSubmit(onSubmit)} className='text-white mb-10'>
             {/* Email Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">

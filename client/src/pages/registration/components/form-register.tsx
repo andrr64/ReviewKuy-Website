@@ -24,7 +24,7 @@ export default function FormRegister() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='text-xs text-white'>
+        <form onSubmit={handleSubmit(onSubmit)} className='text-white'>
             {/* Name Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">
