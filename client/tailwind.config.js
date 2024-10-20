@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      textColor: {
+        'primary': '#464164'
+      },
       fontSize: {
         'base': '1rem'
       },
@@ -26,11 +29,19 @@ export default {
         // => @media (min-width: 1280px) { ... }
       },
       backgroundColor: {
+        'dark-purple': '#291F39',
+        'grey-purple': '#605B72',
+        'purple': '#4F4472',
+        'semi-white': '#F8FAFD',
+        'light-purple': '#F0ECFF',
+
+
         'primary': '#2B2738',
         'button-purple': '#4F4472',
         'semilight-purple': '#605B72',
         'light-purple': '#F0ECFF',
         'field': '#403D4C',
+        'main': '#F8FAFD',
         'active-field': '#67627E'
       },
     },
