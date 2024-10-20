@@ -30,7 +30,7 @@ const createMenu = (title: string, items: MenuItem[]) => (
 
 export default function Footer() {
     return (
-        <div className='w-full space-y-10 py-10 tablet:py-20 text-1xl tablet:text-sm tablet:space-x-10 laptop:space-x-20 bg-primary tablet:space-y-0 tablet:flex tablet:justify-center'>
+        <div className='w-full space-y-10 py-10 tablet:py-20 text-1xl tablet:text-sm tablet:space-x-10 laptop:space-x-20 bg-dark-purple tablet:space-y-0 tablet:flex tablet:justify-center'>
             <div className="flex items-center justify-center tablet:items-start">
                 <Link to={'/'}>
                     <img className="h-16 tablet:h-24" src={RK_WhiteLogo} alt="" />
