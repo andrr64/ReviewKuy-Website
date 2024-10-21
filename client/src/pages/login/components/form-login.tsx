@@ -21,7 +21,7 @@ export default function FormLogin() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='text-white mb-10'>
+        <form onSubmit={handleSubmit(onSubmit)} className='text-white text-sm mb-10'>
             {/* Email Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">
@@ -92,14 +92,11 @@ export default function FormLogin() {
                 </div>
             </div>
 
-
-
-
             {/* Login Button */}
             <div className="text-white text-center">
                 <button
                     type="submit"
-                    className="rounded-full transition duration-300 bg-button-purple font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
+                    className="rounded-full transition duration-300 bg-button-purple py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
                 >
                     Login
                 </button>

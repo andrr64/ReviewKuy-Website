@@ -8,7 +8,7 @@ export default function LogoSection() {
         <img src={RK_WhiteLogo} alt="Review Kuy Logo" className="h-20 mx-auto mb-2" />
       </a>
       <p className='font-bold text-xl'>Login</p>
-      <p className="opacity-80">Silahkan masukan email dan password.</p>
+      <p className="text-sm opacity-80">Silahkan masukan email dan password.</p>
     </div>
   )
 }
