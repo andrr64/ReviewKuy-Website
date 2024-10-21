@@ -9,15 +9,21 @@
     font-style: normal;
 }
 
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 * {
     font-family: 'Poppins';
 }
 
-.hv-center{
+.hv-center {
     @apply justify-center items-center
 }
 
-.transition-300{
+.transition-300 {
     @apply transition duration-300
 }
 
