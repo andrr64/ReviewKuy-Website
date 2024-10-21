@@ -7,10 +7,7 @@ export default {
   theme: {
     extend: {
       textColor: {
-        'primary': '#464164'
-      },
-      fontSize: {
-        'base': '1rem'
+        'primary': '#291F39',
       },
       backgroundImage: {
         'banner-login': "url(src/assets/background-image/banner-login.jpg)"
