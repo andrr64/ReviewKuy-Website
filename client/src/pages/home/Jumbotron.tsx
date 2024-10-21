@@ -3,7 +3,7 @@ import phone_illustration from './assets/phone-illustration.png';
 
 function Jumbotron() {
   return (
-    <section id='jumbotron' className='flex flex-wrap p-8 rounded-2xl items-center bg-light-purple'>
+    <section id='jumbotron' className='flex flex-wrap p-12 rounded-2xl items-center bg-light-purple'>
       <div id='text-container' className='text-primary space-y-5 w-1/2 pr-4'>
         <h1 className='font-bold text-4xl'>Temukan Gadget Terbaikmu di ReviewKuy</h1>
         <p><b>ReviewKuy</b> memberikan ulasan jujur, tips teknis, dan katalog spesifikasi lengkap, membantu kamu memilih gadget terbaik. </p>

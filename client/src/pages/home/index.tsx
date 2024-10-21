@@ -4,7 +4,7 @@ import Jumbotron from "./Jumbotron";
 
 export default function Home() {
   return (
-    <main className="bg-main py-20 space-y-8 px-40">
+    <main className="bg-main py-10 space-y-8 px-40">
         <Jumbotron />
         <Category />
         <Brand/>
