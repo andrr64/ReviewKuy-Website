@@ -24,7 +24,7 @@ export default function FormRegister() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='text-white'>
+        <form onSubmit={handleSubmit(onSubmit)} className='text-sm text-white'>
             {/* Name Field */}
             <div className="mb-4">
                 <label className="block opacity-90 mb-2" htmlFor="email">
@@ -161,7 +161,7 @@ export default function FormRegister() {
             <div className="text-white text-center">
                 <button
                     type="submit"
-                    className="rounded-full transition duration-300 bg-button-purple font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
+                    className="rounded-full transition duration-300 bg-button-purple py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full hover:shadow-lg"
                 >
                     Daftar
                 </button>
