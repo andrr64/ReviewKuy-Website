@@ -1,28 +1,28 @@
 import React from 'react';
 import LogoSection from './components/bagian-logo';
-import FormLogin from './components/form-login';
 import { IoCloseSharp } from "react-icons/io5";
+import FormRegister from './components/form-register';
 
-interface LoginPageProps {
+interface RegisterPageProps {
   callback: () => void; // Define the type for the callback
 }
 
-const LoginModal: React.FC<LoginPageProps> = ({ callback }) => {
+const RegisterModal: React.FC<RegisterPageProps> = ({ callback }) => {
+
   return (
-    <div className="bg-dark-purple shadow-lg p-5 laptop:p-10 w-full max-w-xl rounded-2xl desktop:w-1/3">
+    <div className="bg-dark-purple w-1/3 shadow-lg pb-10 px-10 pt-4 rounded-2xl">
       <div className='w-full flex justify-end'>
         <button
           onClick={callback} // Pass the callback correctly without calling it directly
-          className="text-white opacity-90 text-left text-gray-600 mb-4 flex items-center"
+          className="text-white opacity-90 text-right text-gray-600 mb-4"
         >
           <IoCloseSharp className="text-2xl" />
         </button>
       </div>
       <LogoSection />
-      <FormLogin />
+      <FormRegister />
     </div>
   );
-
 };
 
-export default LoginModal;
+export default RegisterModal;
