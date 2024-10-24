@@ -4,10 +4,14 @@ import cookieParser from 'cookie-parser'; // Opsional, digunakan jika menggunaka
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import API_User from './routes/user.route.js';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+
+// Pindahkan cors di sini, sebelum rute API
+app.use(cors()); // Ini mengizinkan semua origin
 
 app.use(express.json());
 app.use(cookieParser());
@@ -16,18 +20,7 @@ const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
 app.use(express.static(path.join(__dirname, 'admin', 'dist')));
 
-// WEB
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-// });
-
-// app.get('/admin', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'admin', 'dist', 'index.html'));
-// });
-
 // RUTE API
-// app.use('/auth', authRoute);
-// app.use('/security', securityRoute);
 app.use('/api/user', API_User);
 
 mongoose
@@ -41,7 +34,6 @@ mongoose
   .catch((err) => {
     console.error(err);
   });
-
 
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`);
