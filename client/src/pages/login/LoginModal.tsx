@@ -4,10 +4,11 @@ import FormLogin from './components/form-login';
 import { IoCloseSharp } from "react-icons/io5";
 
 interface LoginPageProps {
-  callback: () => void; // Define the type for the callback
+  callback: () => void;
+  regCallback: () => void
 }
 
-const LoginModal: React.FC<LoginPageProps> = ({ callback }) => {
+const LoginModal: React.FC<LoginPageProps> = ({ callback, regCallback }) => {
   return (
     <div className="bg-dark-purple shadow-lg p-5 laptop:p-10 w-full max-w-xl rounded-2xl desktop:w-1/3">
       <div className='w-full flex justify-end'>
@@ -19,7 +20,7 @@ const LoginModal: React.FC<LoginPageProps> = ({ callback }) => {
         </button>
       </div>
       <LogoSection />
-      <FormLogin />
+      <FormLogin regCallback={regCallback} />
     </div>
   );
 

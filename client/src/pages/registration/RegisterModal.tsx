@@ -4,11 +4,11 @@ import { IoCloseSharp } from "react-icons/io5";
 import FormRegister from './components/form-register';
 
 interface RegisterPageProps {
-  callback: () => void; // Define the type for the callback
+  callback: () => void;
+  loginCallback:() => void;
 }
 
-const RegisterModal: React.FC<RegisterPageProps> = ({ callback }) => {
-
+const RegisterModal: React.FC<RegisterPageProps> = ({ callback, loginCallback }) => {
   return (
     <div className="bg-dark-purple w-1/3 shadow-lg pb-10 px-10 pt-4 rounded-2xl">
       <div className='w-full flex justify-end'>
@@ -20,7 +20,7 @@ const RegisterModal: React.FC<RegisterPageProps> = ({ callback }) => {
         </button>
       </div>
       <LogoSection />
-      <FormRegister />
+      <FormRegister loginCallback={loginCallback}/>
     </div>
   );
 };

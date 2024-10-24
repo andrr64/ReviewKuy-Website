@@ -3,8 +3,11 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
+interface FormLoginProps {
+    regCallback: () => void;
+}
 
-export default function FormLogin() {
+export default function FormLogin({ regCallback }: FormLoginProps) {
     const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
     useEffect(() => setTitle('Login'), []);
@@ -86,9 +89,7 @@ export default function FormLogin() {
                     <a href="/forgot-password" >
                         Lupa password
                     </a>
-                    <a href="/register">
-                        Daftar Akun
-                    </a>
+                    <p className='cursor-pointer' onClick={regCallback}>Daftar Akun</p>
                 </div>
             </div>
 

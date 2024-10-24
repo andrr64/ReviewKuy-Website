@@ -12,7 +12,7 @@ function Navbar() {
     const handleRegClick = () => setRegModalOpen(true);
 
     const closeRegModal = () => setRegModalOpen(false);
-    const closeModal = () => {
+    const closeLoginModal = () => {
         setModalOpen(false); // Tutup modal setelah animasi selesai
     };
 
@@ -67,12 +67,18 @@ function Navbar() {
             {/* Modal untuk Login */}
             {isModalOpen && (
                 <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
-                    <LoginModal callback={closeModal} />
+                    <LoginModal callback={closeLoginModal} regCallback={() => {
+                        closeLoginModal();
+                        handleRegClick();
+                    }} />
                 </div>
             )}
             {isRegModalOpen && (
-                <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 mt-10`}>
-                    <RegisterModal callback={closeRegModal} />
+                <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
+                    <RegisterModal callback={closeRegModal} loginCallback={() => {
+                        closeRegModal();
+                        handleLoginClick();
+                    }} />
                 </div>
             )}
 

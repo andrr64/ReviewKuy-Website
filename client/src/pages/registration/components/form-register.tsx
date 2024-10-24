@@ -5,7 +5,11 @@ import { FaEyeSlash } from 'react-icons/fa6';
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
 
-export default function FormRegister() {
+interface FormRegisterProps {
+    loginCallback: () => void;
+}
+
+export default function FormRegister({ loginCallback }: FormRegisterProps) {
     const [showPassword, setShowPassword] = useState(false); // State untuk toggle password visibility
     const minPasswordLength = 10;
     const minNameLength = 4;
@@ -150,14 +154,14 @@ export default function FormRegister() {
                     <a href="/forgot-password" >
                         Lupa password
                     </a>
-                    <a href="/login">
+                    <p className='cursor-pointer' onClick={loginCallback}>
                         Sudah memiliki akun? <b>Login</b>
-                    </a>
+                    </p>
                 </div>
             </div>
 
 
-            {/* Login Button */}
+            {/* Reg Button */}
             <div className="text-white text-center">
                 <button
                     type="submit"
