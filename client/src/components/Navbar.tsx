@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { RK_WhiteLogo } from "../assets/import";
 import LoginModal from "../pages/login/LoginModal";  // Pastikan jalur import sudah benar
-import RegisterModal from "../pages/registration/RegisterModal";
+import RegisterModal from "../pages/register/RegisterModal";
 
 function Navbar() {
     const [isModalOpen, setModalOpen] = useState(false); // State untuk modal
@@ -74,7 +74,7 @@ function Navbar() {
                 </div>
             )}
             {isRegModalOpen && (
-                <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
+                <div className={`fixed inset-0 flex items-center mt-10 justify-center bg-black bg-opacity-50 z-50`}>
                     <RegisterModal callback={closeRegModal} loginCallback={() => {
                         closeRegModal();
                         handleLoginClick();
