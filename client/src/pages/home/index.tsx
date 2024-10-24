@@ -1,3 +1,4 @@
+import About from "./About";
 import Brand from "./Brand";
 import Category from "./Category";
 import Jumbotron from "./Jumbotron";
@@ -8,6 +9,7 @@ export default function Home() {
         <Jumbotron />
         <Category />
         <Brand/>
+        <About/>
     </main>
   )
 }
