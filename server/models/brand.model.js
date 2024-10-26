@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
-const User = sequelize.define('user', {
-    user_id: {
+const Brand = sequelize.define('brand', {
+    brand_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -12,12 +12,11 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
+    description: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
     },
-    password: {
+    logo_url: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -25,4 +24,4 @@ const User = sequelize.define('user', {
     timestamps: true,
 });
 
-export default User;
+export default Brand;

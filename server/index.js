@@ -1,40 +1,39 @@
-import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser'; // Opsional, digunakan jika menggunakan cookies
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import API_User from './routes/user.route.js';
 import cors from 'cors';
+import user_route from './routes/user.route.js';
+import sequelize from './db.js';
+import brand_route from './routes/brand.route.js';
 
 dotenv.config();
 
 const app = express();
 
-// Pindahkan cors di sini, sebelum rute API
-app.use(cors()); // Ini mengizinkan semua origin
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connected successfully');
+    await sequelize.sync(); // Sinkronisasi model ke database
+    console.log('Database synchronized');
+    
+    // Middleware
+    app.use(cors()); // Ini mengizinkan semua origin
+    app.use(express.json());
+    app.use(cookieParser());
 
-app.use(express.json());
-app.use(cookieParser());
+    // Rute
+    app.use('/api/user', user_route);
+    app.use('/api/brand', brand_route);
 
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
-app.use(express.static(path.join(__dirname, 'admin', 'dist')));
+    // Menjalankan server
+    app.listen(process.env.SERVER_PORT, () => {
+      console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`);
+    });
+  } catch (error) {
+    console.error('SERVER ERROR: ', error);
+    process.exit(1); // keluar dari aplikasi jika gagal koneksi
+  }
+};
 
-// RUTE API
-app.use('/api/user', API_User);
-
-mongoose
-  .connect(process.env.MONGODB)
-  .then(() => {
-    console.log('-----------------------------');
-    console.log('DB OK');
-    console.log('Successfully connected to database');
-    console.log('-----------------------------');
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-
-app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`);
-});
+startServer();

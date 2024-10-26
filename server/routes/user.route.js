@@ -1,8 +1,9 @@
 import express from "express";
-import { createUser } from "../controllers/user.controller.js";
+import { createUser, updateUser } from "../controllers/user.controller.js";
 
-const API_User = express.Router();
+const user_route = express.Router();
 
-API_User.post('/account/create', createUser);
+user_route.post('/', createUser);
+user_route.put('/:userId', updateUser);
 
-export default API_User;
+export default user_route;
