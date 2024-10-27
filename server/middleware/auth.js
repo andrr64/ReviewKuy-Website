@@ -3,19 +3,26 @@ import { serverUnauthorized } from '../utility/response_helper.js';
 
 // middleware/auth.js
 export const verifyAdmin = (req, res, next) => {
-    // const user = req.user; // Asumsikan Anda sudah mengautentikasi pengguna dan menyimpan informasi di req.user
+    const token = req.cookies.adminToken; // Ambil token dari cookie
     
-    // if (!user || user.role !== 'admin') {
-    //     return res.status(403).json({ message: 'Access denied.' }); // Forbidden
-    // }
-    next(); // Jika pengguna adalah admin, lanjutkan ke route berikutnya
+    if (!token) {
+        return serverUnauthorized(res, 'No token provided.');
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return serverUnauthorized(res, 'Failed to authenticate token.');
+        }
+        req.admin = { id: decoded.id }; // Simpan informasi admin ke req
+        next();
+    });
 };
 
 export const verifyAccessToken = (req, res, next) => {
     const token = req.cookies.accessToken;
 
     if (!token) {
-        return serverUnauthorized(res, 'Access token is missing.');
+        return serverUnauthorized(res, 'Unauthorized.');
     }   
 
     try {
