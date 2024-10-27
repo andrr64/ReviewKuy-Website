@@ -1,14 +1,17 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 import { 
     serverBadRequest, 
     serverConflict, 
     serverError, 
     serverCreated, 
-    serverNotFound
-} from '../utility/response_helper.js'; // Sesuaikan dengan path yang benar
+    serverNotFound, 
+    serverSuccess,
+    serverUnauthorized
+} from '../utility/response_helper.js';
 
-// Regex untuk validasi format email
+const saltRounds = 12;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Fungsi untuk verifikasi input
@@ -29,30 +32,27 @@ const verifyInput = (name, email, password) => {
 export const createUser = async (req, res) => {
     const { name, email, password } = req.body;
 
-    // Validasi input
     const validation = verifyInput(name, email, password);
     if (!validation.valid) {
         return serverBadRequest(res, validation.message);
     }
 
     try {
-        // Cek apakah email sudah ada di database
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
             return serverConflict(res, 'Email is already registered.');
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Set bcrypt salt rounds (rekomendasi: minimal 12)
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Buat pengguna baru
         const newUser = await User.create({
             name,
             email,
             password: hashedPassword,
         });
 
-        // Kirim response
         return serverCreated(res, 'User created successfully', {
             id: newUser.user_id,
             name: newUser.name,
@@ -64,10 +64,11 @@ export const createUser = async (req, res) => {
     }
 };
 
-// Fungsi untuk memperbarui pengguna
+// Tambahkan middleware verifyAccessToken sebelum updateUser
 export const updateUser = async (req, res) => {
     const { userId } = req.params;
     const { name, email, password } = req.body;
+    
 
     // Validasi input
     const validation = verifyInput(name, email, password);
@@ -75,33 +76,35 @@ export const updateUser = async (req, res) => {
         return serverBadRequest(res, validation.message);
     }
 
+    // Pastikan user yang ingin di-update sesuai dengan ID di token
+    if (req.user.id !== parseInt(userId)) {
+        return serverUnauthorized(res, 'You can only update your own account.');
+    }
+
     try {
-        // Cek apakah pengguna ada di database
         const user = await User.findOne({ where: { user_id: userId } });
         if (!user) {
             return serverNotFound(res, 'User not found.');
         }
-        
+
         const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) {
+        if (existingUser && existingUser.user_id !== userId) {
             return serverConflict(res, 'Email is already registered.');
         }
 
-        // Update pengguna
         const updatedData = {
             name,
             email,
         };
 
-        // Update password jika ada perubahan
+        // Hash password jika ada perubahan
         if (password) {
-            updatedData.password = await bcrypt.hash(password, 10);
+            updatedData.password = await bcrypt.hash(password, saltRounds);
         }
 
         await User.update(updatedData, { where: { user_id: userId } });
 
-        // Kirim response
-        return serverCreated(res, 'User updated successfully', {
+        return serverSuccess(res, 'User updated successfully', {
             id: user.user_id,
             name: updatedData.name,
             email: updatedData.email,
@@ -110,4 +113,66 @@ export const updateUser = async (req, res) => {
         console.error('Error updating user:', error);
         return serverError(res, 'Something went wrong, please try again later.');
     }
+};
+// Fungsi untuk login
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return serverBadRequest(res, 'Email and password are required.');
+    }
+
+    try {
+        const user = await User.findOne({ where: { email } });
+        
+        if (!user) {
+            return serverNotFound(res, 'User not found.');
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return serverBadRequest(res, 'Invalid credentials.');
+        }
+
+        // Create JWT access and refresh tokens
+        const accessToken = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign({ id: user.user_id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+        // Send accessToken and refreshToken in HttpOnly cookies
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
+            sameSite: 'Strict',
+            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        });
+
+        return serverSuccess(res, 'Login successful', { accessToken });
+    } catch (error) {
+        console.error('Error during login:', error);
+        return serverError(res, 'Something went wrong, please try again later.');
+    }
+};
+
+export const logoutUser = (req, res) => {
+    // Hapus cookies accessToken dan refreshToken
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Set ke true dalam produksi
+        sameSite: 'Strict',
+    });
+
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+    });
+
+    return serverSuccess(res, 'Logout successful');
 };
