@@ -15,3 +15,6 @@ export const serverCreated = (res, message, data) =>
 
 export const serverNotFound = (res, message) => 
     res.status(404).json({ message });
+
+export const serverUnauthorized = (res, message) => 
+    res.status(401).json({ message });
