@@ -6,11 +6,13 @@ export const verifyAdmin = (req, res, next) => {
     const token = req.cookies.adminToken; // Ambil token dari cookie
     
     if (!token) {
-        return serverUnauthorized(res, 'No token provided.');
+        res.clearCookie('adminToken'); // Hapus cookie jika token tidak ada
+        return serverUnauthorized(res, 'Unauthorized.');
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
+            res.clearCookie('adminToken'); // Hapus cookie jika token tidak valid
             return serverUnauthorized(res, 'Failed to authenticate token.');
         }
         req.admin = { id: decoded.id }; // Simpan informasi admin ke req
@@ -22,6 +24,7 @@ export const verifyAccessToken = (req, res, next) => {
     const token = req.cookies.accessToken;
 
     if (!token) {
+        res.clearCookie('accessToken'); // Hapus cookie jika token tidak ada
         return serverUnauthorized(res, 'Unauthorized.');
     }   
 
@@ -30,6 +33,7 @@ export const verifyAccessToken = (req, res, next) => {
         req.user = decoded; // Menyimpan data decoded ke request
         next(); // Melanjutkan ke route handler berikutnya
     } catch (error) {
+        res.clearCookie('accessToken'); // Hapus cookie jika token tidak valid atau kadaluarsa
         return serverUnauthorized(res, 'Invalid or expired access token.');
     }
 };
