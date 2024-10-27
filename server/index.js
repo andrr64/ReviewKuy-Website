@@ -5,6 +5,7 @@ import cors from 'cors';
 import user_route from './routes/user.route.js';
 import sequelize from './db.js';
 import brand_route from './routes/brand.route.js';
+import admin_route from './routes/admin.route.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ const startServer = async () => {
     // Rute
     app.use('/api/user', user_route);
     app.use('/api/brand', brand_route);
+    app.use('/api/admin', admin_route);
 
     // Menjalankan server
     app.listen(process.env.SERVER_PORT, () => {
