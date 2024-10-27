@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
-import { 
-    serverBadRequest, 
-    serverConflict, 
-    serverError, 
-    serverCreated, 
-    serverNotFound, 
+import {
+    serverBadRequest,
+    serverConflict,
+    serverError,
+    serverCreated,
+    serverNotFound,
     serverSuccess,
     serverUnauthorized
 } from '../utility/response_helper.js';
@@ -68,7 +68,7 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     const { userId } = req.params;
     const { name, email, password } = req.body;
-    
+
 
     // Validasi input
     const validation = verifyInput(name, email, password);
@@ -114,6 +114,7 @@ export const updateUser = async (req, res) => {
         return serverError(res, 'Something went wrong, please try again later.');
     }
 };
+
 // Fungsi untuk login
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -124,7 +125,7 @@ export const loginUser = async (req, res) => {
 
     try {
         const user = await User.findOne({ where: { email } });
-        
+
         if (!user) {
             return serverNotFound(res, 'User not found.');
         }
@@ -141,19 +142,26 @@ export const loginUser = async (req, res) => {
         // Send accessToken and refreshToken in HttpOnly cookies
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Set to true in production
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+            maxAge: 15 * 60 * 1000,
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        return serverSuccess(res, 'Login successful', { accessToken });
+        return serverSuccess(res, 'Login successful', {
+            user: {
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar
+            }
+        });
+
     } catch (error) {
         console.error('Error during login:', error);
         return serverError(res, 'Something went wrong, please try again later.');
