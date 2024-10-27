@@ -21,6 +21,10 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    avatar: {
+        type: DataTypes.STRING,
+        defaultValue: 'http://link_sebuah_gambar.com'
+    }
 }, {
     timestamps: true,
 });
