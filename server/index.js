@@ -17,9 +17,13 @@ const startServer = async () => {
     console.log('Database connected successfully');
     await sequelize.sync(); // Sinkronisasi model ke database
     console.log('Database synchronized');
-    
+    const corsOptions = {
+      origin: 'http://localhost:5173', // URL frontend Anda
+      credentials: true, // Mengizinkan pengiriman kredensial (cookie)
+    };
+
     // Middleware
-    app.use(cors()); // Ini mengizinkan semua origin
+    app.use(cors(corsOptions)); // Ini mengizinkan semua origin
     app.use(express.json());
     app.use(cookieParser());
 
