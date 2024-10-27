@@ -6,6 +6,8 @@ import user_route from './routes/user.route.js';
 import sequelize from './db.js';
 import brand_route from './routes/brand.route.js';
 import admin_route from './routes/admin.route.js';
+import category_route from './routes/category.route.js';
+import product_route from './routes/product.route.js';
 
 dotenv.config();
 
@@ -14,23 +16,26 @@ const app = express();
 const startServer = async () => {
   try {
     await sequelize.authenticate();
+    const paksa = false;
     console.log('Database connected successfully');
-    await sequelize.sync(); // Sinkronisasi model ke database
+    await sequelize.sync({force: paksa}); // Sinkronisasi model ke database
     console.log('Database synchronized');
-    const corsOptions = {
-      origin: 'http://localhost:5173', // URL frontend Anda
-      credentials: true, // Mengizinkan pengiriman kredensial (cookie)
-    };
 
     // Middleware
-    app.use(cors(corsOptions)); // Ini mengizinkan semua origin
+    app.use(cors({
+      origin: 'http://localhost:5173', // URL frontend Anda
+      credentials: true, // Mengizinkan pengiriman kredensial (cookie)
+    })); // Ini mengizinkan semua origin
     app.use(express.json());
     app.use(cookieParser());
 
     // Rute
     app.use('/api/user', user_route);
-    app.use('/api/brand', brand_route);
     app.use('/api/admin', admin_route);
+
+    app.use('/api/brand', brand_route);
+    app.use('/api/category', category_route);
+    app.use('/api/product', product_route);
 
     // Menjalankan server
     app.listen(process.env.SERVER_PORT, () => {

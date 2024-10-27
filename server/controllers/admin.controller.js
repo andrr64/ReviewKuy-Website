@@ -58,7 +58,7 @@ export const createAdmin = async (req, res) => {
 
 // Fungsi untuk memperbarui informasi admin
 export const updateAdmin = async (req, res) => {
-    const { adminId } = req.params;
+    const { id } = req.params;
     const { username, password } = req.body;
 
     const validation = verifyInput(username, password);
@@ -67,18 +67,18 @@ export const updateAdmin = async (req, res) => {
     }
 
     // Pastikan admin yang ingin di-update sesuai dengan ID di token
-    if (req.admin.id !== parseInt(adminId)) {
+    if (req.admin.id !== parseInt(id)) {
         return serverUnauthorized(res, 'You can only update your own account.');
     }
 
     try {
-        const admin = await Admin.findOne({ where: { admin_id: adminId } });
+        const admin = await Admin.findOne({ where: { admin_id: id } });
         if (!admin) {
             return serverNotFound(res, 'Admin not found.');
         }
 
         const existingAdmin = await Admin.findOne({ where: { username } });
-        if (existingAdmin && existingAdmin.admin_id !== adminId) {
+        if (existingAdmin && existingAdmin.admin_id !== id) {
             return serverConflict(res, 'Username is already registered.');
         }
 
@@ -91,7 +91,7 @@ export const updateAdmin = async (req, res) => {
             updatedData.password = await bcrypt.hash(password, saltRounds);
         }
 
-        await Admin.update(updatedData, { where: { admin_id: adminId } });
+        await Admin.update(updatedData, { where: { admin_id: id } });
 
         return serverSuccess(res, 'Admin updated successfully', {
             id: admin.admin_id,
