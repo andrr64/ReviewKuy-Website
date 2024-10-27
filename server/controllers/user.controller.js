@@ -43,8 +43,6 @@ export const createUser = async (req, res) => {
             return serverConflict(res, 'Email is already registered.');
         }
 
-        // Set bcrypt salt rounds (rekomendasi: minimal 12)
-        const saltRounds = 12;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const newUser = await User.create({
@@ -54,7 +52,7 @@ export const createUser = async (req, res) => {
         });
 
         return serverCreated(res, 'User created successfully', {
-            id: newUser.user_id,
+            id: newUser.id, // Perubahan di sini
             name: newUser.name,
             email: newUser.email,
         });
@@ -66,9 +64,8 @@ export const createUser = async (req, res) => {
 
 // Tambahkan middleware verifyAccessToken sebelum updateUser
 export const updateUser = async (req, res) => {
-    const { userId } = req.params;
+    const { id } = req.params;
     const { name, email, password } = req.body;
-
 
     // Validasi input
     const validation = verifyInput(name, email, password);
@@ -77,18 +74,18 @@ export const updateUser = async (req, res) => {
     }
 
     // Pastikan user yang ingin di-update sesuai dengan ID di token
-    if (req.user.id !== parseInt(userId)) {
+    if (req.user.id !== parseInt(id)) {
         return serverUnauthorized(res, 'You can only update your own account.');
     }
 
     try {
-        const user = await User.findOne({ where: { user_id: userId } });
+        const user = await User.findOne({ where: { id } });
         if (!user) {
             return serverNotFound(res, 'User not found.');
         }
 
         const existingUser = await User.findOne({ where: { email } });
-        if (existingUser && existingUser.user_id !== userId) {
+        if (existingUser && existingUser.id !== id) { // Perubahan di sini
             return serverConflict(res, 'Email is already registered.');
         }
 
@@ -102,10 +99,10 @@ export const updateUser = async (req, res) => {
             updatedData.password = await bcrypt.hash(password, saltRounds);
         }
 
-        await User.update(updatedData, { where: { user_id: userId } });
+        await User.update(updatedData, { where: { id } }); // Perubahan di sini
 
         return serverSuccess(res, 'User updated successfully', {
-            id: user.user_id,
+            id: user.id, // Perubahan di sini
             name: updatedData.name,
             email: updatedData.email,
         });
@@ -136,8 +133,8 @@ export const loginUser = async (req, res) => {
         }
 
         // Create JWT access and refresh tokens
-        const accessToken = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ id: user.user_id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '15m' }); // Perubahan di sini
+        const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' }); // Perubahan di sini
 
         // Send accessToken and refreshToken in HttpOnly cookies
         res.cookie('accessToken', accessToken, {
