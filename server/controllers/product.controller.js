@@ -143,6 +143,87 @@ export const getProductById = async (req, res) => {
     }
 };
 
+
+// Fungsi untuk mendapatkan produk berdasarkan kategori
+export const getProductByCategory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const products = await Product.findAll({ where: { category_id: id } });
+
+        // Mengambil spesifikasi, gambar, brand, dan category untuk setiap produk
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const specifications = await ProductSpecification.findAll({
+                where: { product_id: product.id },
+            });
+
+            const pictures = await ProductImage.findAll({
+                where: { product_id: product.id },
+            });
+
+            const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+
+            return {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                brand: brand,
+                category: category,
+                specifications: specifications.map(spec => ({
+                    name: spec.name,
+                    value: spec.value,
+                })),
+                pictures: pictures.map(pic => pic.image_url),
+            };
+        }));
+
+        return res.json(formattedProducts);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to retrieve products by category' });
+    }
+};
+
+// Fungsi untuk mendapatkan produk berdasarkan brand
+export const getProductByBrand = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const products = await Product.findAll({ where: { brand_id: id } });
+
+        // Mengambil spesifikasi, gambar, brand, dan category untuk setiap produk
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const specifications = await ProductSpecification.findAll({
+                where: { product_id: product.id },
+            });
+
+            const pictures = await ProductImage.findAll({
+                where: { product_id: product.id },
+            });
+
+            const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+
+            return {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                brand: brand,
+                category: category,
+                specifications: specifications.map(spec => ({
+                    name: spec.name,
+                    value: spec.value,
+                })),
+                pictures: pictures.map(pic => pic.image_url),
+            };
+        }));
+
+        return res.json(formattedProducts);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to retrieve products by brand' });
+    }
+};
+
 export const updateProduct = async (req, res) => {
     const transaction = await sequelize.transaction(); // Mulai transaksi
 
