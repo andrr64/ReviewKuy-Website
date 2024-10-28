@@ -3,6 +3,12 @@ import sequelize from '../db.js';
 import Product from './product.model.js';
 
 const ProductImage = sequelize.define('product_image', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false,
+    },
     product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -3,6 +3,12 @@ import sequelize from '../db.js';
 import Product from './product.model.js';
 
 const ProductSpecification = sequelize.define('product_specification', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false,
+    },
     product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
