@@ -4,20 +4,20 @@ import { serverBadRequest, serverConflict, serverError, serverSuccess, serverCre
 // Fungsi untuk membuat kategori baru
 export const createCategory = async (req, res) => {
     try {
-        const { name }= req.body;
-        if (!name ) {
-            return serverBadRequest(res, "Name diperlukan");
+        const { name } = req.body;
+        if (!name) {
+            return serverBadRequest(res, "Name is required");
         }
 
         const categoryExist = await Category.findOne({ where: { name } });
         if (categoryExist) {
-            return serverConflict(res, "Kategori sudah ada");
+            return serverConflict(res, "Category already exists");
         }
 
         const newCategory = await Category.create({ name });
-        return serverCreated(res, "Kategori berhasil dibuat", newCategory);
+        return serverCreated(res, "Category created successfully", newCategory);
     } catch (error) {
-        return serverError(res, "Gagal membuat kategori");
+        return serverError(res, "Failed to create category");
     }
 };
 
@@ -29,13 +29,13 @@ export const updateCategory = async (req, res) => {
 
         const category = await Category.findByPk(id);
         if (!category) {
-            return serverNotFound(res, "Kategori tidak ditemukan");
+            return serverNotFound(res, "Category not found");
         }
 
         await category.update({ name });
-        return serverSuccess(res, "Kategori berhasil diperbarui", category);
+        return serverSuccess(res, "Category updated successfully", category);
     } catch (error) {
-        return serverError(res, "Gagal memperbarui kategori");
+        return serverError(res, "Failed to update category");
     }
 };
 
@@ -46,13 +46,13 @@ export const deleteCategory = async (req, res) => {
 
         const category = await Category.findByPk(id);
         if (!category) {
-            return serverNotFound(res, "Kategori tidak ditemukan");
+            return serverNotFound(res, "Category not found");
         }
 
         await category.destroy();
-        return serverSuccess(res, "Kategori berhasil dihapus");
+        return serverSuccess(res, "Category deleted successfully");
     } catch (error) {
-        return serverError(res, "Gagal menghapus kategori");
+        return serverError(res, "Failed to delete category");
     }
 };
 
@@ -60,30 +60,32 @@ export const deleteCategory = async (req, res) => {
 export const getCategory = async (req, res) => {
     try {
         const categories = await Category.findAll({
-            attributes: ['id', 'name'] // Hanya ambil kolom 'id' dan 'name'
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
         });
-        
         return serverSuccess(res, "Categories retrieved successfully", categories);
     } catch (error) {
         console.error(error);
-        return serverError(res, "Failed to retrieve categories");
+        return serverError(res, "Failed to retrieve data");
     }
 };
-
 
 // Fungsi untuk mendapatkan kategori berdasarkan ID
 export const getCategoryById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const category = await Category.findByPk(id);
+        const category = await Category.findByPk(id, {
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        });
         if (!category) {
-            return serverNotFound(res, "Kategori tidak ditemukan");
+            return serverNotFound(res, "Category not found");
         }
-
-        return serverSuccess(res, "Data kategori ditemukan", category);
+        return serverSuccess(res, "Category retrieved successfully", category);
     } catch (error) {
-        return serverError(res, "Gagal mendapatkan data kategori");
+        return serverError(res, "Failed to retrieve data");
     }
 };
-    

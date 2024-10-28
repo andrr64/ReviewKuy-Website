@@ -1,4 +1,4 @@
-import { serverBadRequest, serverConflict, serverCreated, serverError, serverSuccess } from "../utility/response_helper.js";
+import { serverBadRequest, serverConflict, serverCreated, serverError, serverSuccess, serverNotFound } from "../utility/response_helper.js";
 import sequelize from '../db.js';
 import Product from "../models/product.model.js";
 import Brand from "../models/brand.model.js";
@@ -75,15 +75,15 @@ export const getProducts = async (req, res) => {
             });
 
             // Ambil data brand dan category secara manual
-            const brand = await Brand.findOne({ where: { id: product.brand_id}, attributes: { exclude: ['createdAt', 'updatedAt'] }});
+            const brand = await Brand.findOne({ where: { id: product.brand_id}, attributes: { exclude: ['createdAt', 'updatedAt'] }});;
             const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] }});
 
             return {
                 id: product.id,
                 name: product.name,
                 description: product.description,
-                brand: brand    , // Mengambil nama brand
-                category: category,// Mengambil nama category
+                brand: brand,
+                category: category,
                 specifications: specifications.map(spec => ({
                     name: spec.name,
                     value: spec.value,
@@ -108,7 +108,7 @@ export const getProductById = async (req, res) => {
         });
 
         if (!product) {
-            return serverConflict(res, 'Product not found');
+            return serverNotFound(res, 'Product not found'); // Mengganti dengan serverNotFound
         }
 
         const specifications = await ProductSpecification.findAll({
@@ -156,9 +156,9 @@ export const updateProduct = async (req, res) => {
         }
 
         // Cek apakah produk yang akan diperbarui ada
-        const existingProduct = await Product.findOne({ where: { product_id: id } });
+        const existingProduct = await Product.findOne({ where: { id } });
         if (!existingProduct) {
-            return serverConflict(res, 'Product not found');
+            return serverNotFound(res, 'Product not found'); // Mengganti dengan serverNotFound
         }
 
         // Update produk
@@ -168,7 +168,7 @@ export const updateProduct = async (req, res) => {
             brand_id,
             category_id
         }, {
-            where: { product_id: id },
+            where: { id },
             transaction
         });
 
@@ -223,9 +223,9 @@ export const deleteProduct = async (req, res) => {
         const { id } = req.params; // Ambil id dari parameter
 
         // Cek apakah produk yang akan dihapus ada
-        const existingProduct = await Product.findOne({ where: { product_id: id } });
+        const existingProduct = await Product.findOne({ where: { id } });
         if (!existingProduct) {
-            return serverConflict(res, 'Product not found');
+            return serverNotFound(res, 'Product not found'); // Mengganti dengan serverNotFound
         }
 
         // Hapus spesifikasi yang terkait dengan produk
@@ -242,7 +242,7 @@ export const deleteProduct = async (req, res) => {
 
         // Hapus produk
         await Product.destroy({
-            where: { product_id: id },
+            where: { id },
             transaction
         });
 
