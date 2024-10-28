@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
 const Brand = sequelize.define('brand', {
-    brand_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,

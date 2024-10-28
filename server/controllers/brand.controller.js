@@ -24,7 +24,7 @@ export const createBrand = async (req, res) => {
 };
 
 export const updateBrand = async (req, res) => {
-    const { brandId } = req.params; // Mengambil ID brand dari parameter URL
+    const { id } = req.params; // Mengambil ID brand dari parameter URL
     const { name, description, logo_url } = req.body;
 
     // Validasi input
@@ -34,7 +34,7 @@ export const updateBrand = async (req, res) => {
 
     try {
         // Mencari brand berdasarkan ID
-        const brand = await Brand.findByPk(brandId);
+        const brand = await Brand.findByPk(id);
 
         if (!brand) {
             return serverBadRequest(res, 'Brand not found.');
@@ -54,11 +54,11 @@ export const updateBrand = async (req, res) => {
 };
 
 export const deleteBrandById = async (req, res) => {
-    const { brandId } = req.params; // Mengambil ID brand dari parameter URL
+    const { id } = req.params; // Mengambil ID brand dari parameter URL
 
     try {
         // Mencari brand berdasarkan ID
-        const brand = await Brand.findByPk(brandId);
+        const brand = await Brand.findByPk(id);
 
         if (!brand) {
             return serverBadRequest(res, 'Brand not found.');
@@ -86,11 +86,11 @@ export const getBrands = async (req, res) => {
 };
 
 export const getBrandById = async (req, res) => {
-    const { brandId } = req.params; // Mengambil ID brand dari parameter URL
+    const { id } = req.params; // Mengambil ID brand dari parameter URL
 
     try {
         // Mencari brand berdasarkan ID
-        const brand = await Brand.findByPk(brandId);
+        const brand = await Brand.findByPk(id);
 
         if (!brand) {
             return serverBadRequest(res, 'Brand not found.');
