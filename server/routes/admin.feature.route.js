@@ -6,15 +6,15 @@ import { createProduct, deleteProduct, updateProduct } from '../controllers/prod
 const router = express.Router();
 
 router.post('/brand', createBrand);
-router.delete('/brand/:brandId', deleteBrandById);
-router.put('/brand/:brandId', updateBrand);
+router.delete('/brand/:id', deleteBrandById);
+router.put('/brand/:id', updateBrand);
 
 router.post('/create-account', createAdmin);
 router.put('/update-account/:id', updateAdmin);
 
 router.post('/category', createCategory);
-router.put('/category/:categoryId', updateCategory);
-router.delete('/category/:categoryId', deleteCategory);
+router.put('/category/:id', updateCategory);
+router.delete('/category/:id', deleteCategory);
 
 router.post('/product', createProduct)
 router.put('/product/:id', updateProduct);

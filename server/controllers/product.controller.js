@@ -75,17 +75,15 @@ export const getProducts = async (req, res) => {
             });
 
             // Ambil data brand dan category secara manual
-            const brand = await Brand.findOne({ where: { brand_id: product.brand_id } });
-            const category = await Category.findOne({ where: { category_id: product.category_id } });
+            const brand = await Brand.findOne({ where: { id: product.brand_id}, attributes: { exclude: ['createdAt', 'updatedAt'] }});
+            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] }});
 
             return {
-                product_id: product.id,
+                id: product.id,
                 name: product.name,
                 description: product.description,
-                brand_id: product.brand_id,
-                category_id: product.category_id,
-                brand_data: brand, // Mengambil nama brand
-                category_data: category, // Mengambil nama category
+                brand: brand    , // Mengambil nama brand
+                category: category,// Mengambil nama category
                 specifications: specifications.map(spec => ({
                     name: spec.name,
                     value: spec.value,
@@ -106,7 +104,7 @@ export const getProductById = async (req, res) => {
         const { id } = req.params;
 
         const product = await Product.findOne({
-            where: { product_id: id }
+            where: { id }
         });
 
         if (!product) {
@@ -121,18 +119,16 @@ export const getProductById = async (req, res) => {
             where: { product_id: product.id },
         });
 
-        // Ambil data brand dan category secara manual
-        const brand = await Brand.findOne({ where: { brand_id: product.brand_id } });
-        const category = await Category.findOne({ where: { category_id: product.category_id } });
+        // Ambil data brand dan category secara manual dengan kondisi yang benar
+        const brand = await Brand.findOne({ where: { id: product.brand_id },  attributes: { exclude: ['createdAt', 'updatedAt'] }});
+        const category = await Category.findOne({ where: { id: product.category_id },  attributes: { exclude: ['createdAt', 'updatedAt'] }});
 
         const formattedProduct = {
-            product_id: product.id,
+            id: product.id,
             name: product.name,
             description: product.description,
-            brand_id: product.brand_id,
-            category_id: product.category_id,
-            brand_data: brand, // Mengambil nama brand
-            category_data: category, // Mengambil nama category
+            brand: brand,
+            category: category,
             specifications: specifications.map(spec => ({
                 name: spec.name,
                 value: spec.value,
