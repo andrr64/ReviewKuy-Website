@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
 const Category = sequelize.define('category', {
-    category_id: {
+    id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,

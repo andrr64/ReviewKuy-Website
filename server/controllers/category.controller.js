@@ -24,10 +24,10 @@ export const createCategory = async (req, res) => {
 // Fungsi untuk memperbarui kategori
 export const updateCategory = async (req, res) => {
     try {
-        const { categoryId } = req.params;
+        const { id } = req.params;
         const { name } = req.body;
 
-        const category = await Category.findByPk(categoryId);
+        const category = await Category.findByPk(id);
         if (!category) {
             return serverNotFound(res, "Kategori tidak ditemukan");
         }
@@ -42,9 +42,9 @@ export const updateCategory = async (req, res) => {
 // Fungsi untuk menghapus kategori
 export const deleteCategory = async (req, res) => {
     try {
-        const { categoryId } = req.params;
+        const { id } = req.params;
 
-        const category = await Category.findByPk(categoryId);
+        const category = await Category.findByPk(id);
         if (!category) {
             return serverNotFound(res, "Kategori tidak ditemukan");
         }
@@ -59,19 +59,24 @@ export const deleteCategory = async (req, res) => {
 // Fungsi untuk mendapatkan semua kategori
 export const getCategory = async (req, res) => {
     try {
-        const categories = await Category.findAll();
-        return serverSuccess(res, "Data kategori ditemukan", categories);
+        const categories = await Category.findAll({
+            attributes: ['id', 'name'] // Hanya ambil kolom 'id' dan 'name'
+        });
+        
+        return serverSuccess(res, "Categories retrieved successfully", categories);
     } catch (error) {
-        return serverError(res, "Gagal mendapatkan data kategori");
+        console.error(error);
+        return serverError(res, "Failed to retrieve categories");
     }
 };
+
 
 // Fungsi untuk mendapatkan kategori berdasarkan ID
 export const getCategoryById = async (req, res) => {
     try {
-        const { categoryId } = req.params;
+        const { id } = req.params;
 
-        const category = await Category.findByPk(categoryId);
+        const category = await Category.findByPk(id);
         if (!category) {
             return serverNotFound(res, "Kategori tidak ditemukan");
         }

@@ -23,7 +23,7 @@ const Product = sequelize.define('product', {
         allowNull: false,
         references: {
             model: Brand, // Gunakan string nama tabel, tidak perlu impor model lain di sini
-            key: 'brand_id',
+            key: 'id',
         },
         onDelete: 'CASCADE',
     },
@@ -32,7 +32,7 @@ const Product = sequelize.define('product', {
         allowNull: false,
         references: {
             model: Category, // Gunakan string nama tabel
-            key: 'category_id',
+            key: 'id',
         },
         onDelete: 'CASCADE',
     },
