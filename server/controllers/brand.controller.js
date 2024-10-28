@@ -76,7 +76,11 @@ export const deleteBrandById = async (req, res) => {
 export const getBrands = async (req, res) => {
     try {
         // Mengambil semua brand dari database
-        const brands = await Brand.findAll();
+        const brands = await Brand.findAll({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        });
         
         // Mengembalikan response dengan daftar brand
         return serverSuccess(res, 'Brands retrieved successfully', brands);
@@ -90,7 +94,11 @@ export const getBrandById = async (req, res) => {
 
     try {
         // Mencari brand berdasarkan ID
-        const brand = await Brand.findByPk(id);
+        const brand = await Brand.findByPk(id, {
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        });
 
         if (!brand) {
             return serverBadRequest(res, 'Brand not found.');
