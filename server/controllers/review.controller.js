@@ -5,14 +5,16 @@ import { serverBadRequest, serverError, serverCreated, serverNotFound, serverUna
 // Fungsi untuk membuat ulasan baru
 export const createReview = async (req, res) => {
     try {
-        const { productId, title, review } = req.body;
+        const { productId, title, rating, review } = req.body;
         const decodedUserId = req.user.id; // Mengambil userId dari token yang sudah diverifikasi
 
         // Validasi input
-        if (!productId || !title || !review) {
-            return serverBadRequest(res, "Product ID, title, and review are required");
+        if (!productId || !title || !review || !rating) {
+            return serverBadRequest(res, "Product ID, title, rating, and review are required");
         }
-
+        if (rating <=0 || rating > 5){
+            return serverBadRequest(res, "Invalid rating.");
+        }
         // Cek apakah produk ada
         const product = await Product.findByPk(productId);
         if (!product) {
@@ -36,6 +38,7 @@ export const createReview = async (req, res) => {
             user_id: decodedUserId, // Menggunakan userId dari token
             title,
             review,
+            rating,
             product_id: productId, // Menyimpan productId di sini
         });
 
@@ -43,5 +46,50 @@ export const createReview = async (req, res) => {
     } catch (error) {
         console.error('Error creating review:', error); // Pesan lebih spesifik
         return serverError(res, "Failed to create review");
+    }
+};
+
+
+export const updateReview = async (req, res) => {
+    try {
+        const { productId, title, rating, review } = req.body;
+        const decodedUserId = req.user.id;
+
+        // Validasi input
+        if (!productId || !title || !review || !rating) {
+            return serverBadRequest(res, "Product ID, title, rating, and review are required");
+        }
+        if (rating <= 0 || rating > 5) {
+            return serverBadRequest(res, "Invalid rating.");
+        }
+
+        // Cek apakah produk ada
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return serverNotFound(res, "Product not found");
+        }
+
+        // Cek apakah ulasan pengguna untuk produk ini ada
+        const existingReview = await Review.findOne({
+            where: {
+                user_id: decodedUserId,
+                product_id: productId
+            }
+        });
+
+        if (!existingReview) {
+            return serverNotFound(res, "Review not found for this product.");
+        }
+
+        // Update review
+        existingReview.title = title;
+        existingReview.rating = rating;
+        existingReview.review = review;
+        await existingReview.save();
+
+        return serverSuccess(res, "Review updated successfully", existingReview);
+    } catch (error) {
+        console.error('Error updating review:', error);
+        return serverError(res, "Failed to update review");
     }
 };
