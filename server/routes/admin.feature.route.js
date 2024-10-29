@@ -5,19 +5,19 @@ import { createAdmin, updateAdmin } from '../controllers/admin.controller.js';
 import { createProduct, deleteProduct, updateProduct } from '../controllers/product.controller.js';
 const router = express.Router();
 
-router.post('/brand', createBrand);
-router.delete('/brand/:id', deleteBrandById);
-router.put('/brand/:id', updateBrand);
+router.post('/brand/post', createBrand);
+router.delete('/brand/delete/:id', deleteBrandById);
+router.put('/brand/update/:id', updateBrand);
 
 router.post('/create-account', createAdmin);
 router.put('/update-account/:id', updateAdmin);
 
-router.post('/category', createCategory);
-router.put('/category/:id', updateCategory);
-router.delete('/category/:id', deleteCategory);
+router.post('/category/post', createCategory);
+router.put('/category/update/:id', updateCategory);
+router.delete('/category/delete/:id', deleteCategory);
 
-router.post('/product', createProduct)
-router.put('/product/:id', updateProduct);
-router.delete('/product/:id', deleteProduct);
+router.post('/product/post', createProduct)
+router.put('/product/update/:id', updateProduct);
+router.delete('/product/delete/:id', deleteProduct);
 
 export default router;
