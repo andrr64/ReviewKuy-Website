@@ -3,13 +3,33 @@ import { RK_FullLogo } from "../assets/import";
 import { LuLogOut, LuMonitorSmartphone } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { showPrompt } from "../util/alert";
 
 const Sidebar = () => {
   const [dashboardExpanded, setDashboardExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const logoutHandler = async () => {
-    console.log("log out!!!");
+    try {
+      const confirm = await showPrompt('Logout', 'Apakah anda yakin ingin keluar?');
+      if (!confirm) {
+        return;
+      }
+      const response = await axios.post('/api/admin/logout');
+      if (response.status === 200) {
+        navigate('/login')
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Gagal',
+        text: error.message,
+        confirmButtonColor: '#F44336'
+      });
+    }
   };
 
   const menuItems = [
@@ -34,7 +54,7 @@ const Sidebar = () => {
           <img className="h-16 mx-auto" src={RK_FullLogo} alt="Logo" />
         </div>
         <h1 className="text-xl font-bold my-2 text-center text-gray-900 dark:text-white">Admin Tools</h1>
-        
+
         {/* Divider */}
         <hr className="my-4 border-gray-300 dark:border-gray-600" />
 
@@ -54,9 +74,8 @@ const Sidebar = () => {
 
             {/* Animated Sub-menu */}
             <ul
-              className={`pl-8 mt-1 space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${
-                dashboardExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-              }`}
+              className={`pl-8 mt-1 space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${dashboardExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                }`}
             >
               {dashboardSubItems.map((subItem, index) => (
                 <li key={index}>
