@@ -6,7 +6,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* Rute dengan MainLayout */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
