@@ -1,18 +1,37 @@
 import jwt from 'jsonwebtoken';
-import { serverUnauthorized } from '../utility/response_helper.js';
+import { serverSuccess, serverUnauthorized } from '../utility/response_helper.js';
+
+export const checkAdminToken = (req, res) => {
+    const adminToken = req.cookies.adminToken;
+    if (!adminToken) {
+        res.clearCookie('adminToken');
+        res.clearCookie('refreshToken'); 
+        return serverUnauthorized(res, 'Unauthorized');
+    }
+    jwt.verify(adminToken, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            res.clearCookie('adminToken');
+            res.clearCookie('refreshToken');
+            return serverUnauthorized(res, 'Unauthorized access.');
+        }
+        return serverSuccess(res, 'OK', true);
+    });
+}
 
 // Middleware untuk memverifikasi akses admin
 export const verifyAdmin = (req, res, next) => {
     const token = req.cookies.adminToken;
-    
+
     if (!token) {
         res.clearCookie('adminToken');
+        res.clearCookie('refreshToken');
         return serverUnauthorized(res, 'Unauthorized.');
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             res.clearCookie('adminToken');
+            res.clearCookie('refreshToken');
             return serverUnauthorized(res, 'Unauthorized access.');
         }
         req.admin = { id: decoded.id };

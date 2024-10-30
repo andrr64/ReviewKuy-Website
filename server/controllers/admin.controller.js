@@ -108,30 +108,30 @@ export const loginAdmin = async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return serverBadRequest(res, 'Username and password are required.');
+        return serverUnauthorized(res, 'Username and password are required.');
     }
 
     try {
         const admin = await Admin.findOne({ where: { username } });
 
         if (!admin) {
-            return serverNotFound(res, 'Admin not found.');
+            return serverUnauthorized(res, 'Admin not found.');
         }
 
         const isPasswordValid = await bcrypt.compare(password, admin.password);
         if (!isPasswordValid) {
-            return serverBadRequest(res, 'Invalid credentials.');
+            return serverUnauthorized(res, 'Username and password are required.');
         }
 
         // Create JWT token
         const token = jwt.sign({ id: admin.admin_id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-        
+
         // Set token in HttpOnly cookie
         res.cookie('adminToken', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Set to true in production
             sameSite: 'Strict',
-            maxAge: 15 * 60 * 1000 // 15 minutes in milliseconds
+            maxAge: 60 * 60 * 1000 // 15 minutes in milliseconds
         });
 
         return serverSuccess(res, 'Login successful');
