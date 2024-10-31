@@ -83,7 +83,8 @@ export const getBrands = async (req, res) => {
         });
         
         // Mengembalikan response dengan daftar brand
-        return serverSuccess(res, 'Brands retrieved successfully', brands);
+        return res.status(200).send(brands);
+
     } catch (error) {
         return serverError(res, error.message);
     }

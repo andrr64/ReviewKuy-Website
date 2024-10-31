@@ -64,7 +64,7 @@ export const getCategory = async (req, res) => {
                 exclude: ['createdAt', 'updatedAt']
             }
         });
-        return serverSuccess(res, "Categories retrieved successfully", categories);
+        return res.status(200).send(categories);
     } catch (error) {
         console.error(error);
         return serverError(res, "Failed to retrieve data");
