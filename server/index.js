@@ -8,6 +8,7 @@ import brand_route from './routes/brand.route.js';
 import admin_route from './routes/admin.route.js';
 import category_route from './routes/category.route.js';
 import product_route from './routes/product.route.js';
+import product_spec_opt_route from './routes/product.specification.option.route.js';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const app = express();
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    const paksa = true;
+    const paksa = false;
     console.log('Database connected successfully');
     await sequelize.sync({force: paksa}); // Sinkronisasi model ke database
     console.log('Database synchronized');
