@@ -10,6 +10,11 @@ import {
     handleClearAllImages,
     handleDeleteThumbnail
 } from "./handler"; // Impor semua fungsi handler
+import { PRODUCT_SPEC_OPT_CONTROLLER_getOptions } from "../../../controller/product.specification.option";
+import { ProductSpecificationOption } from "../../../model/product.specification.option";
+import { showFailed, showSuccess } from "../../../util/alert";
+import LoadingModal from "../../../components/modal/LoadingModal";
+import axios from "axios";
 
 // Fungsi untuk form registrasi produk
 export function ProductRegistrationForm() {
@@ -18,10 +23,14 @@ export function ProductRegistrationForm() {
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [uploadingGallery, setUploadingGallery] = useState(false);
     const [brandData, setBrandData] = useState<Brand[]>([]);
-    const [categoryData, setCategoryData] = useState<{ id: number; name: string }[]>([]); // State untuk kategori
-    // State untuk menyimpan spesifikasi sebagai array objek
+    const [categoryData, setCategoryData] = useState<{ id: number; name: string }[]>([]);
     const [specifications, setSpecifications] = useState([{ type: "", value: "" }]);
-    const specOptions = ["GPU", "CPU", "RAM", "Storage", "Layar", "Battery", "OS"];
+    const [specOptions, setSpecOptions] = useState<ProductSpecificationOption[]>([]);
+    const [name, setName] = useState(""); // State untuk nama produk
+    const [description, setDescription] = useState(""); // State untuk deskripsi produk
+    const [selectedBrand, setSelectedBrand] = useState<number | null>(null); // State untuk merek yang dipilih
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // State untuk kategori yang dipilih
+    const [loading, setLoading] = useState<boolean>(false);
 
     // Fungsi untuk menambah baris spesifikasi baru
     const handleAddSpecification = () => {
@@ -29,7 +38,7 @@ export function ProductRegistrationForm() {
     };
 
     // Fungsi untuk mengubah nilai spesifikasi tertentu
-    const handleSpecificationChange = (index:number, field:any, newValue:any) => {
+    const handleSpecificationChange = (index: number, field: any, newValue: any) => {
         const updatedSpecs = specifications.map((spec, i) =>
             i === index ? { ...spec, [field]: newValue } : spec
         );
@@ -52,29 +61,101 @@ export function ProductRegistrationForm() {
             }
         };
 
-        const fetchCategories = async () => { // Fungsi untuk mengambil kategori
+        const fetchCategories = async () => {
             try {
                 const categories = await CATEGORY_CONTROLLER_getCategories();
-                setCategoryData(categories); // Simpan data kategori
+                setCategoryData(categories);
             } catch (error) {
                 console.error('Error fetching categories:', error);
             }
         };
 
+        const fetchSpecOption = async () => {
+            try {
+                const specOptionData: ProductSpecificationOption[] = await PRODUCT_SPEC_OPT_CONTROLLER_getOptions();
+                setSpecOptions(specOptionData); // Simpan data spesifikasi yang diambil ke dalam state
+            } catch (error) {
+                console.error('Error fetching specification options:', error);
+            }
+        };
+
         fetchBrands();
-        fetchCategories(); // Panggil fungsi untuk mengambil kategori
+        fetchCategories();
+        fetchSpecOption(); // Panggil fungsi untuk mengambil spesifikasi opsi
     }, []);
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const resetForm = () => {
+        setName('');
+        setDescription('');
+        setSelectedBrand(null);
+        setSelectedCategory(null);
+        setThumbnail(null);
+        setImages([]);
+        setSpecifications([{ type: "", value: "" }]);
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Logika untuk menambahkan produk bisa ditambahkan di sini
+        setLoading(true);
+        try {
+            // Fungsi untuk mengubah file menjadi Base64
+            const toBase64 = (file: File) => {
+                return new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = (error) => reject(error);
+                });
+            };
+
+            // Konversi thumbnail dan galeri ke Base64
+            const thumbnailBase64 = thumbnail ? await toBase64(thumbnail) : null;
+            const galleryBase64 = await Promise.all(images.map((image) => toBase64(image)));
+
+            // Bentuk `specification_data` sesuai format yang baru
+            const specification_data = specifications.map((spec, index) => ({
+                spec_opt_id: specOptions.find(option => option.name === spec.type)?.id,
+                value: spec.value,
+                index
+            }));
+
+            // Bentuk `picture_data` dengan thumbnail sebagai `index: 0` dan sisanya untuk galeri
+            const picture_data = [
+                { index: 0, base64_img: thumbnailBase64 },
+                ...galleryBase64.map((base64_img, idx) => ({
+                    index: idx + 1, // indeks dimulai dari 1 untuk galeri
+                    base64_img
+                }))
+            ];
+
+            // Bentuk data form sesuai dengan format yang diinginkan
+            const productData = {
+                name,
+                description,
+                brand_id: selectedBrand,
+                category_id: selectedCategory,
+                specification_data,
+                picture_data
+            };
+            const response = await axios.post('/api/admin/feature/product/create', productData);
+            if (response.status === 201) {
+                await showSuccess('Ok', 'Data berhasil disimpan');
+                resetForm();
+            }
+        } catch (error: any) {
+            setLoading(false);
+            await showFailed('Error', error.response.data.message);
+            return;
+        }
+        setLoading(false);
     };
 
     return (
         <div className="p-6">
+            {loading && <LoadingModal />} {/* Tampilkan modal loading jika loading true */}
             <h1 className="text-2xl font-bold text-gray-800">Tambahkan Produk</h1>
             <p className="text-gray-600 mt-1">Silakan masukkan detail produk untuk registrasi.</p>
-            <form className="mt-8" onSubmit={handleSubmit}>
+            <form className="mt-8 text-l" onSubmit={handleSubmit}>
                 <div className="flex gap-6">
                     {/* Kolom Detail Produk */}
                     <div className="space-y-4 flex-1">
@@ -83,6 +164,8 @@ export function ProductRegistrationForm() {
                             <input
                                 type="text"
                                 placeholder="Masukkan nama produk"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none"
                             />
                         </div>
@@ -91,13 +174,20 @@ export function ProductRegistrationForm() {
                             <label className="block text-gray-800 font-medium">Deskripsi</label>
                             <textarea
                                 placeholder="Masukkan deskripsi produk"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-32 focus:ring-2 focus:ring-slate-600 focus:outline-none"
                             />
                         </div>
 
                         <div>
                             <label className="block text-gray-800 font-medium">Merek</label>
-                            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none transition-all duration-300 ease-in-out">
+                            <select
+                                value={selectedBrand ?? ""}
+                                onChange={(e) => setSelectedBrand(Number(e.target.value))}
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none transition-all duration-300 ease-in-out"
+                            >
+                                <option value="" disabled>Pilih Merek</option>
                                 {brandData.map((brand) => (
                                     <option key={brand.id} value={brand.id}>
                                         {brand.name}
@@ -108,7 +198,12 @@ export function ProductRegistrationForm() {
 
                         <div>
                             <label className="block text-gray-800 font-medium">Kategori</label>
-                            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none transition-all duration-300 ease-in-out">
+                            <select
+                                value={selectedCategory ?? ""}
+                                onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none transition-all duration-300 ease-in-out"
+                            >
+                                <option value="" disabled>Pilih Kategori</option>
                                 {categoryData.map((category) => (
                                     <option key={category.id} value={category.id}>
                                         {category.name}
@@ -131,7 +226,7 @@ export function ProductRegistrationForm() {
                                     >
                                         <option value="" disabled>Pilih Spesifikasi</option>
                                         {specOptions.map((option) => (
-                                            <option key={option} value={option}>{option}</option>
+                                            <option key={option.id} value={option.name}>{option.name}</option>
                                         ))}
                                     </select>
 
@@ -148,18 +243,17 @@ export function ProductRegistrationForm() {
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteSpecification(index)}
-                                        className="text-red-500 hover:text-red-700 p-2"
+                                        className="bg-red-500 hover:bg-red-600 text-white rounded-md p-2"
                                     >
                                         <FaTrash />
                                     </button>
                                 </div>
                             ))}
-
                             {/* Tombol untuk menambah spesifikasi baru */}
                             <button
                                 type="button"
                                 onClick={handleAddSpecification}
-                                className="mt-2 w-1/2 btn-default"
+                                className="bg-blue-500 hover:bg-blue-600 w-1/2 text-white rounded-md p-2 mt-2"
                             >
                                 Tambah Spesifikasi
                             </button>
@@ -189,7 +283,7 @@ export function ProductRegistrationForm() {
                             {thumbnail && (
                                 <button
                                     type="button"
-                                    className="ml-2 bg-red-500 text-white rounded-md p-1 text-xs hover:bg-red-600 transition duration-300"
+                                    className="ml-2 bg-red-500 text-white rounded-md p-1 hover:bg-red-600 transition duration-300"
                                     onClick={() => handleDeleteThumbnail(setThumbnail)}
                                 >
                                     Hapus
@@ -206,7 +300,7 @@ export function ProductRegistrationForm() {
                                     />
                                     <button
                                         type="button"
-                                        className="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white rounded-md p-3 text-xs hover:bg-red-600 transition duration-300"
+                                        className="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white rounded-md p-3 hover:bg-red-600 transition duration-300"
                                         onClick={() => handleDeleteThumbnail(setThumbnail)}
                                     >
                                         <FaTrash />
@@ -230,7 +324,7 @@ export function ProductRegistrationForm() {
                             {images.length !== 0 && (
                                 <button
                                     type="button"
-                                    className="ml-2 bg-red-500 text-white rounded-md p-1 text-xs hover:bg-red-600 transition duration-300"
+                                    className="ml-2 bg-red-500 text-white rounded-md p-1 hover:bg-red-600 transition duration-300"
                                     onClick={() => handleClearAllImages(setImages)}
                                 >
                                     Hapus Semua
@@ -247,7 +341,7 @@ export function ProductRegistrationForm() {
                                     />
                                     <button
                                         type="button"
-                                        className="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white rounded-md p-2 text-xs hover:bg-red-600 transition duration-300"
+                                        className="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white rounded-md p-2 hover:bg-red-600 transition duration-300"
                                         onClick={() => handleDeleteImage(index, setImages)}
                                     >
                                         <FaTrash />
