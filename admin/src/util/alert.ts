@@ -10,6 +10,15 @@ export const showInfo = (title: string, text: string) => {
     });
 };
 
+export const showSuccess = (title: string, text: string) => {
+    return Swal.fire({
+        icon: 'success',
+        title: title,
+        text: text,
+        confirmButtonText: 'OK'
+    });
+};
+
 // Fungsi untuk menampilkan pesan warning
 export const showWarning = (title: string, text: string) => {
     return Swal.fire({
