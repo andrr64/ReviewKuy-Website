@@ -4,6 +4,17 @@
 
 /* Default Button */
 
+@font-face {
+    font-family: 'Poppins';
+    src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
 .trans {
     @apply transition duration-300
 }
