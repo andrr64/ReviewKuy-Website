@@ -6,18 +6,18 @@ import { createProduct, deleteProduct, updateProduct } from '../controllers/prod
 import { createSpecOption } from '../controllers/product.specification.option.controller.js';
 const router = express.Router();
 
-router.post('/brand/post', createBrand);
+router.post('/brand/create', createBrand);
 router.delete('/brand/delete/:id', deleteBrandById);
 router.put('/brand/update/:id', updateBrand);
 
 router.post('/create-account', createAdmin);
 router.put('/update-account/:id', updateAdmin);
 
-router.post('/category/post', createCategory);
+router.post('/category/create', createCategory);
 router.put('/category/update/:id', updateCategory);
 router.delete('/category/delete/:id', deleteCategory);
 
-router.post('/product/post', createProduct)
+router.post('/product/create', createProduct)
 router.put('/product/update/:id', updateProduct);
 router.delete('/product/delete/:id', deleteProduct);
 

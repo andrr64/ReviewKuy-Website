@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 import Product from './product.model.js';
+import ProductSpecificationOption from './product.specification.option.model.js';
 
 const ProductSpecification = sequelize.define('product.specification', {
     id: {
@@ -18,9 +19,14 @@ const ProductSpecification = sequelize.define('product.specification', {
         },
         onDelete: 'CASCADE',
     },
-    name: {
-        type: DataTypes.STRING,
+    spec_opt_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: ProductSpecificationOption,
+            key: 'id',
+        },
+        onDelete: 'CASCADE',
     },
     value: {
         type: DataTypes.STRING,

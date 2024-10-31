@@ -5,55 +5,74 @@ import Brand from "../models/brand.model.js";
 import Category from "../models/category.model.js";
 import ProductSpecification from "../models/product.specification.model.js";
 import ProductImage from "../models/product.image.model.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Tambahkan Firebase Storage
+import { firebaseApp } from "../index.js";
+
+// Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
+const uploadToFirebase = async (base64, fileName) => {
+    const storage = getStorage(firebaseApp); 
+    
+    const storageRef = ref(storage, `product.images/${fileName}`);
+
+    // Cek dan potong header base64 jika ada
+    const base64Data = base64.split(',')[1];
+    
+    // Validasi base64
+    if (!base64Data) {
+        throw new Error('Invalid base64 data');
+    }
+
+    try {
+        const buffer = Buffer.from(base64Data, 'base64');
+        const snapshot = await uploadBytes(storageRef, buffer);
+        return await getDownloadURL(snapshot.ref);
+    } catch (error) {
+        console.error('Upload error:', error);
+        throw new Error('Upload failed: ' + error.message);
+    }
+};
 
 export const createProduct = async (req, res) => {
-    const transaction = await sequelize.transaction(); // Mulai transaksi
-
+    const transaction = await sequelize.transaction();
     try {
         const { name, description, brand_id, category_id, specification_data, picture_data } = req.body;
 
-        // Validasi input: Pastikan semua field yang diperlukan diisi
         if (!name || !brand_id || !category_id || !specification_data || !picture_data) {
             return serverBadRequest(res, 'All fields are required.');
         }
 
-        // Cek apakah produk dengan nama yang sama sudah ada
         const existingProduct = await Product.findOne({ where: { name, brand_id }, transaction });
         if (existingProduct) {
             return serverConflict(res, 'Product already exists');
         }
 
-        // Buat produk baru
-        const newProduct = await Product.create({
-            name,
-            description,
-            brand_id,
-            category_id
-        }, { transaction });
+        const newProduct = await Product.create({ name, description, brand_id, category_id }, { transaction });
 
-        // Simpan `specification_data`
         for (const spec of specification_data) {
-            await ProductSpecification.create({
-                product_id: newProduct.id,
-                ...spec
-            }, { transaction });
+            await ProductSpecification.create({ product_id: newProduct.id, ...spec }, { transaction });
         }
 
-        // Simpan `picture_data`
+        const uploadedPictureData = [];
+
         for (const pict of picture_data) {
-            await ProductImage.create({
+            const fileName = `${newProduct.id}_image_${pict.index}`;
+            const imageUrl = await uploadToFirebase(pict.base64_img, fileName); 
+
+            uploadedPictureData.push({
                 product_id: newProduct.id,
-                index: pict.index, // Pastikan index ada dalam `pict`
-                image_url: pict.image_url // Simpan URL gambar
-            }, { transaction });
+                index: pict.index,
+                image_url: imageUrl
+            });
         }
 
-        // Commit transaksi jika semua langkah berhasil
+        for (const picture of uploadedPictureData) {
+            await ProductImage.create(picture, { transaction });
+        }
+
         await transaction.commit();
         return serverCreated(res, 'Product created successfully', newProduct);
 
     } catch (error) {
-        // Rollback transaksi jika ada error
         await transaction.rollback();
         console.error(error);
         return serverError(res, 'Failed to create product');
@@ -142,7 +161,6 @@ export const getProductById = async (req, res) => {
         return serverError(res, 'Failed to retrieve product');
     }
 };
-
 
 // Fungsi untuk mendapatkan produk berdasarkan kategori
 export const getProductByCategory = async (req, res) => {
