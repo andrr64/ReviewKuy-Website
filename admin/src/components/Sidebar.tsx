@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RK_FullLogo } from "../assets/import";
+import { RK_FullLogo } from "../assets/logo/import";
 import { LuLogOut, LuMonitorSmartphone } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
