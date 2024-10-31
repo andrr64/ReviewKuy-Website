@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { RK_FullLogo } from '../assets/import';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { showFailed } from '../../util/alert';
+import { RK_FullLogo } from '../../assets/logo/import';
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -28,12 +29,8 @@ const Login: React.FC = () => {
                 });
             }
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Gagal',
-                text: error.response?.status === 401 ? 'Username atau password salah.' : 'Gagal terhubung ke server.',
-                confirmButtonColor: '#F44336'
-            });
+            const err = error as any;
+            await showFailed('Login gagal', err.response?.status === 401 ? 'Username atau password salah.' : 'Gagal terhubung ke server.');
         }
     };
 

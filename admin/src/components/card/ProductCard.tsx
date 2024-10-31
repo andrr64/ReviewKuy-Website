@@ -5,7 +5,7 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 interface ProductCardProps {
     product: ProductModel;
     onEdit: (product: ProductModel) => void; // Fungsi untuk mengedit produk
-    onDelete: (productId: Number) => void; // Fungsi untuk menghapus produk
+    onDelete: (productId: number) => void; // Fungsi untuk menghapus produk
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) => {

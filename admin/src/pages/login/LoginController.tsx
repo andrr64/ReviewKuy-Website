@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import Login from "./Login";
-import Error500 from "./Error500";
-import Loading from "../components/Loading";
+import Error500 from "../Error500";
+import Loading from "../../components/Loading";
+import Login from ".";
 
 function LoginController() {
     const [isLogin, setIsLogin] = useState<boolean | null>(null); // null untuk loading
