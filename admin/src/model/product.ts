@@ -1,44 +1,7 @@
-class ProductSpecification {
-    name: string;
-    value: string;
-
-    constructor(name: string, value: string) {
-        this.name = name;
-        this.value = value;
-    }
-}
-
-class ProductImage {
-    imageUrl: string;
-
-    constructor(imageUrl: string) {
-        this.imageUrl = imageUrl;
-    }
-}
-
-class Brand {
-    id: number;
-    name: string; // Anda bisa menambahkan atribut lain yang relevan
-    description: string;
-    logo_url: string;
-
-    constructor(data: any) {
-        this.id = data.id;
-        this.name = data.name;
-        this.description = data.description;
-        this.logo_url = data.logo_url;
-    }
-}
-
-class Category {
-    id: number;
-    name: string; // Anda bisa menambahkan atribut lain yang relevan
-
-    constructor(id: number, name: string) {
-        this.id = id;
-        this.name = name;
-    }
-}
+import { Brand } from "./brand";
+import { Category } from "./category";
+import { ProductImage } from "./product_image";
+import { ProductSpecification } from "./product_specification";
 
 export class ProductModel {
     id: number;
@@ -54,7 +17,7 @@ export class ProductModel {
         this.name = data.name;
         this.description = data.description;
         this.brand = new Brand(data.brand);
-        this.category = new Category(data.category.id, data.category.name);
+        this.category = new Category(data.category);
         this.specifications = data.specifications.map((spec: any) => new ProductSpecification(spec.name, spec.value));
         this.pictures = data.pictures.map((pic: any) => new ProductImage(pic));
     }
