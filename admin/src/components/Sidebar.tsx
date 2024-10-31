@@ -23,10 +23,11 @@ const Sidebar = () => {
         navigate('/login')
       }
     } catch (error) {
+      const err = error as any;
       Swal.fire({
         icon: 'error',
         title: 'Login Gagal',
-        text: error.message,
+        text: err.message,
         confirmButtonColor: '#F44336'
       });
     }

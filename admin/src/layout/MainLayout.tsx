@@ -5,7 +5,7 @@ function MainLayout() {
     return (
       <div>
         <Sidebar />
-        <div className="p-4 ml-64"> {/* Tambahkan margin kiri sesuai lebar sidebar */}
+        <div className="p-10 ml-64"> {/* Tambahkan margin kiri sesuai lebar sidebar */}
           <Outlet />
         </div>
       </div>
