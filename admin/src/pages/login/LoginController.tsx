@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import Error500 from "../Error500";
+import Error500 from "../error-505";
 import Loading from "../../components/Loading";
 import Login from ".";
 
