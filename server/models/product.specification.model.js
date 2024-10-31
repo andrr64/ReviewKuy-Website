@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 import Product from './product.model.js';
 
-const ProductSpecification = sequelize.define('product_specification', {
+const ProductSpecification = sequelize.define('product.specification', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

@@ -16,7 +16,7 @@ const app = express();
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    const paksa = false;
+    const paksa = true;
     console.log('Database connected successfully');
     await sequelize.sync({force: paksa}); // Sinkronisasi model ke database
     console.log('Database synchronized');

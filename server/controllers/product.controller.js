@@ -4,7 +4,7 @@ import Product from "../models/product.model.js";
 import Brand from "../models/brand.model.js";
 import Category from "../models/category.model.js";
 import ProductSpecification from "../models/product.specification.model.js";
-import ProductImage from "../models/product.images.model.js";
+import ProductImage from "../models/product.image.model.js";
 
 export const createProduct = async (req, res) => {
     const transaction = await sequelize.transaction(); // Mulai transaksi
