@@ -13,6 +13,7 @@ export const fetchProducts = async (setProducts: React.Dispatch<React.SetStateAc
   }
 };
 
+
 // Fungsi untuk menghapus produk
 export const handleDeleteProduct = async (id: number, setProducts: React.Dispatch<React.SetStateAction<ProductModel[]>>) => {
   try {
@@ -27,7 +28,7 @@ export const handleDeleteProduct = async (id: number, setProducts: React.Dispatc
       showInfo("Berhasil", "Data berhasil dihapus.");
       setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
     }
-  } catch (error) {
+  } catch (error: any) {
     showFailed("Gagal", error.message);
   }
 };

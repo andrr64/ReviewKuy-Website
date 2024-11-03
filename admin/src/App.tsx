@@ -2,8 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SecureRoute from "./SecureRoute";
 import MainLayout from "./layout/MainLayout";
 import LoginController from "./pages/login/LoginController";
-import ProductPage from "./pages/product";
-import { ProductRegistrationForm } from "./pages/product/add";
+import ProductPage from "./pages/data-management";
+import ProductRegistrationForm from "./pages/data-management/add-product";
+import FormLayout from "./layout/FormLayout";
+import BrandForm from "./pages/data-management/add-brand";
 
 export default function App() {
   return (
@@ -13,8 +15,17 @@ export default function App() {
         <Route element={<SecureRoute />}>
           <Route element={<MainLayout />}>
             <Route path='/' element={<p>Hello World</p>} />
-            <Route path='/product' element={<ProductPage/>} />
-            <Route path="/product/add" element={<ProductRegistrationForm/>} />
+            <Route path='/data' element={<ProductPage />} />
+            <Route path="/data/add-product" element={
+              <FormLayout title="Tambah Produk" desc="Silakan masukkan detail produk untuk registrasi.">
+                <ProductRegistrationForm />
+              </FormLayout>
+            } />
+            <Route path="/data/add-brand" element={
+              <FormLayout title="Tambah Merek" desc="Silakan masukkan detail merek untuk registrasi.">
+                <BrandForm />
+              </FormLayout>} 
+            />
           </Route>
         </Route>
       </Routes>

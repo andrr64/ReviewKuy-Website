@@ -35,7 +35,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Home", icon: <IoHomeOutline />, path: "/" },
-    { name: "Products", icon: <LuMonitorSmartphone />, path: "/product" },
+    { name: "Data Mangement", icon: <LuMonitorSmartphone />, path: "/data" },
   ];
 
   const dashboardSubItems = [
