@@ -1,7 +1,7 @@
 // RuteAman.tsx
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import Error500 from "./pages/error-505";
+import Error500 from "./pages/error/Error505";
 import Loading from "./components/Loading";
 
 const SecureRoute: React.FC = () => {

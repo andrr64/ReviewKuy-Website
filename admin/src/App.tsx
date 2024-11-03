@@ -2,10 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SecureRoute from "./SecureRoute";
 import MainLayout from "./layout/MainLayout";
 import LoginController from "./pages/login/LoginController";
-import ProductPage from "./pages/data-management";
-import ProductRegistrationForm from "./pages/data-management/add-product";
+import ProductPage from "./pages/data-management/DataManagement";
+import ProductRegistrationForm from "./pages/data-management/add-product/AddProduct";
 import FormLayout from "./layout/FormLayout";
-import BrandForm from "./pages/data-management/add-brand";
+import BrandForm from "./pages/data-management/add-brand/AddBrand";
 
 export default function App() {
   return (
