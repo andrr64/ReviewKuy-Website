@@ -1,17 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { ProductModel } from "../../model/product";
-import { fetchProducts, handleDeleteProduct } from "./handler";
+import { fetchProducts, handleDeleteBrand, handleDeleteProduct } from "./handler";
 import RenderProducts from "./render";
 import { useNavigate } from "react-router-dom";
 import { Brand } from "../../model/brand";
-import { BRAND_CONTROLLER_getBrands } from "../../controller/brand";
+import { BRAND_CONTROLLER_deleteBrand, BRAND_CONTROLLER_getBrands } from "../../controller/brand";
 import ButtonIcon from "../../components/button/button_icon";
 import { IconAddCircle } from "../../components/icons/icon";
+import { showPrompt, showSuccess } from "../../util/alert";
+import BrandCard from "../../components/card/BrandCard";
+import { ImSad } from "react-icons/im";
+
+// Fungsi untuk merender brand
+
 
 const ProductPage: React.FC = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [products, setProducts] = useState<ProductModel[]>([]);
   const navigate = useNavigate();
+
+  const renderBrands = (brands: Brand[]) => {
+    if (brands.length === 0) {
+      return (
+        <div className="space-y-2 flex text-base flex-col my-10 justify-center items-center">
+          <ImSad className="text-6xl"/>
+          <h1 className="text-xl">Empty :(</h1>
+        </div>
+      );
+    }
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> {/* Menggunakan grid dengan 3 kolom maksimum */}
+        {brands.map((brand) => (
+          <BrandCard
+            key={brand.id}
+            brand={brand}
+            onEdit={(x) => { }}
+            onDelete={(id) => {
+              handleDeleteBrand(id, setBrands);
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
 
   const fetchBrand = async () => {
     try {
@@ -32,25 +63,16 @@ const ProductPage: React.FC = () => {
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Data Management</h1>
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Brand List</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
         <div className="flex justify-between items-center mb-4">
           <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Merek"} onClick={() => navigate('add-brand')} />
         </div>
-        <ul className="space-y-4">
-          {brands.map((brand) => (
-            <li key={brand.id} className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-sm hover:bg-gray-200 transition-all">
-              <span className="text-lg font-medium text-gray-800">{brand.name}</span>
-              <div className="space-x-2">
-                <button className="px-3 py-1 text-sm font-semibold text-white bg-gray-600 rounded hover:bg-gray-700 transition">Ubah</button>
-                <button className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 transition">Delete</button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {/* Menggunakan fungsi renderBrands */}
+        {renderBrands(brands)}
       </div>
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Product List</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Produk</h2>
         <div className="flex justify-between items-center mb-4">
           <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Produk"} onClick={() => navigate('add-product')} />
         </div>

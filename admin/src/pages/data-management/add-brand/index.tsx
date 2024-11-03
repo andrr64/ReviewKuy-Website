@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { toBase64 } from "../../../util/fileConverter";
-import { BRAND_CONTROLLER_addBrand, BRAND_CONTROLLER_getBrandById } from "../../../controller/brand";
+import { BRAND_CONTROLLER_addBrand } from "../../../controller/brand";
 import { showFailed, showSuccess } from "../../../util/alert";
 
 function BrandForm() {
@@ -17,12 +17,17 @@ function BrandForm() {
     e.preventDefault();
     const data = {
       ...formData,
-      logo: logoFile? await toBase64(logoFile) : null
-    }
+      logo: logoFile ? await toBase64(logoFile) : null,
+    };
     try {
       const response = await BRAND_CONTROLLER_addBrand(data);
-      if (response){
-        showSuccess('Success', 'Merek berhasil disimpan!')
+      if (response) {
+        showSuccess('Success', 'Merek berhasil disimpan!');
+        
+        // Reset form setelah sukses
+        setFormData({ name: "", description: "" });
+        setLogoFile(null);
+        setLogoPreview(null);
       }
     } catch (error: any) {
       console.log(error);
@@ -80,6 +85,7 @@ function BrandForm() {
             placeholder="Masukkan deskripsi produk"
             value={formData.description}
             onChange={handleChange}
+            maxLength={255} // Batasi maksimal karakter deskripsi
             className="mt-1 block w-full border border-gray-300 rounded-md p-2 h-32 focus:ring-2 focus:ring-slate-600 focus:outline-none"
           />
         </div>

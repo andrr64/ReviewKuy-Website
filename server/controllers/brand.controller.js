@@ -1,6 +1,6 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; 
 import Brand from "../models/brand.model.js";
-import { serverBadRequest, serverCreated, serverError } from "../utility/response_helper.js";
+import { serverBadRequest, serverCreated, serverError, serverSuccess } from "../utility/response_helper.js";
 import { firebaseApp } from "../index.js";
 
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
@@ -89,7 +89,8 @@ export const updateBrand = async (req, res) => {
 
 export const deleteBrandById = async (req, res) => {
     const { id } = req.params; // Mengambil ID brand dari parameter URL
-
+    console.log(req);
+    
     try {
         // Mencari brand berdasarkan ID
         const brand = await Brand.findByPk(id);

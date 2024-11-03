@@ -15,10 +15,10 @@ export const BRAND_CONTROLLER_getBrandById = async (brandId: number): Promise<Br
 };
 
 export const BRAND_CONTROLLER_updateBrand = async (brandId: number, brandData: Partial<Brand>): Promise<Brand> => {
-    return axios.put(`/api/admin/feature/brand/update/${brandId}`, brandData);
+    return await axios.put(`/api/admin/feature/brand/update/${brandId}`, brandData);
 };
 
-export const BRAND_CONTROLLER_deleteBrand = async (brandId: number): Promise<boolean> => {
+export const BRAND_CONTROLLER_deleteBrand = async (brandId: number) => {
     return await axios.delete(`/api/admin/feature/brand/delete/${brandId}`);
 };
 
