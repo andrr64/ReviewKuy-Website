@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductModel } from '../../model/product';
-
+import {Button} from 'antd';
 interface ProductCardProps {
     product: ProductModel;
     onEdit: (product: ProductModel) => void; // Fungsi untuk mengedit produk
@@ -10,9 +10,9 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) => {
     return (
         <div className="flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-300 bg-white ">
-            <a className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl" href="#">
+            <div onClick={() => onEdit(product)} className="cursor-pointer relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl">
                 <img className="object-cover  h-60 mx-auto" src={product.pictures[0]?.imageUrl} alt={product.name} />
-            </a>
+            </div>
             <div className="mt-4 px-5 pb-5">
                 <a key={product.id} href="#">
                     <h5 className="text-xl tracking-tight text-slate-900">{product.name}</h5>
@@ -37,18 +37,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) 
                     </div>
                 </div>
                 <div className="flex justify-between">
-                    <button
-                        onClick={() => onEdit(product)} // Memanggil fungsi onEdit saat tombol edit ditekan
-                        className="flex items-center justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                    >
-                        Edit
-                    </button>
-                    <button
-                        onClick={() => onDelete(product.id)} // Memanggil fungsi onDelete saat tombol delete ditekan
-                        className="flex items-center justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-medium text-white hover:bg-red-700"
-                    >
-                        Delete
-                    </button>
+                    <Button color="primary" variant="filled" onClick={() => onEdit(product)}>Ubah</Button>
+                    <Button color="danger" variant="filled" onClick={() => onDelete(product.id)}>Hapus</Button>
                 </div>
             </div>
         </div>

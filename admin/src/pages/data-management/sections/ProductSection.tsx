@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ButtonIcon from "../../../components/button/button_icon";
 import RenderProducts from "../render";
 import { ProductModel } from "../../../model/product";
 import { IconAddCircle } from "../../../components/icons/icon";
@@ -45,7 +44,7 @@ export default function ProductSection() {
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Produk</h2>
             <div className="flex justify-between items-center mb-4">
-                <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Produk"} onClick={() => navigate('add-product')} />
+                {/* <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Produk"} onClick={() => navigate('add-product')} /> */}
             </div>
             <RenderProducts products={products} onDelete={(id) => handleDeleteProduct(id, setProducts)} />
         </div>

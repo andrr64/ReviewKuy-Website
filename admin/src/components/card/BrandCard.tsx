@@ -1,4 +1,5 @@
 import { Brand } from "../../model/brand";
+import { Button } from 'antd';
 
 interface BrandCardProps {
     brand: Brand;
@@ -19,18 +20,8 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, onEdit, onDelete }) => {
             <span className="block text-xl font-bold text-gray-800 mb-2">{brand.name}</span>
             <p className="text-gray-600 text-sm mb-4">Deskripsi: {brand.description}</p>
             <div className="flex justify-between mt-auto">
-                <button
-                    className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition"
-                    onClick={() => onEdit(brand)}
-                >
-                    Ubah
-                </button>
-                <button
-                    className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 transition"
-                    onClick={() => onDelete(brand.id)}
-                >
-                    Hapus
-                </button>
+                <Button color="primary" variant="filled" onClick={() => onEdit(brand)}>Ubah</Button>
+                <Button color="danger" variant="filled" onClick={() => onDelete(brand.id)}>Hapus</Button>
             </div>
         </div>
     );

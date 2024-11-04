@@ -1,5 +1,4 @@
 import { ImSad } from "react-icons/im";
-import ButtonIcon from "../../../components/button/button_icon"
 import BrandCard from "../../../components/card/BrandCard";
 import { IconAddCircle } from "../../../components/icons/icon"
 import { Brand } from "../../../model/brand"
@@ -67,7 +66,7 @@ function BrandSection() {
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
             <div className="flex justify-between items-center mb-4">
-                <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Merek"} onClick={() => navigate('add-brand')} />
+                {/* <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Merek"} onClick={() => navigate('add-brand')} /> */}
             </div>
             {/* Menggunakan fungsi renderBrands */}
             {renderBrands(brands)}
