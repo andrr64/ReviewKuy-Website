@@ -5,18 +5,18 @@ import Brand from "../models/brand.model.js";
 import Category from "../models/category.model.js";
 import ProductSpecification from "../models/product.specification.model.js";
 import ProductImage from "../models/product.image.model.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Tambahkan Firebase Storage
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; // Tambahkan Firebase Storage
 import { firebaseApp } from "../index.js";
 
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
 const uploadToFirebase = async (base64, fileName) => {
-    const storage = getStorage(firebaseApp); 
-    
+    const storage = getStorage(firebaseApp);
+
     const storageRef = ref(storage, `product.images/${fileName}`);
 
     // Cek dan potong header base64 jika ada
     const base64Data = base64.split(',')[1];
-    
+
     // Validasi base64
     if (!base64Data) {
         throw new Error('Invalid base64 data');
@@ -32,12 +32,21 @@ const uploadToFirebase = async (base64, fileName) => {
     }
 };
 
+const deleteFromFirebase = async (fileName) => {
+    const storage = getStorage(firebaseApp);
+    const storageRef = ref(storage, `product.images/${fileName}`);
+    try {
+        await deleteObject(storageRef);
+    } catch (error) {
+    }
+};
+
 export const createProduct = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
-        const { name, description, brand_id, category_id, specification_data, picture_data } = req.body;
+        const { name, description, brand_id, category_id, specification_data, pictures } = req.body;
 
-        if (!name || !brand_id || !category_id || !specification_data || !picture_data) {
+        if (!name || !brand_id || !category_id || !specification_data || !pictures) {
             return serverBadRequest(res, 'All fields are required.');
         }
 
@@ -53,10 +62,11 @@ export const createProduct = async (req, res) => {
         }
 
         const uploadedPictureData = [];
+        for (const pict of pictures) {
+            console.log(pict.index);
 
-        for (const pict of picture_data) {
             const fileName = `${newProduct.id}_image_${pict.index}`;
-            const imageUrl = await uploadToFirebase(pict.base64_img, fileName); 
+            const imageUrl = await uploadToFirebase(pict.base64, fileName);
 
             uploadedPictureData.push({
                 product_id: newProduct.id,
@@ -83,19 +93,19 @@ export const getProducts = async (req, res) => {
     try {
         const products = await Product.findAll();
 
-        // Mengambil spesifikasi, gambar, brand, dan category untuk setiap produk
         const formattedProducts = await Promise.all(products.map(async (product) => {
             const specifications = await ProductSpecification.findAll({
                 where: { product_id: product.id },
+                order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
             });
 
             const pictures = await ProductImage.findAll({
                 where: { product_id: product.id },
+                order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
             });
 
-            // Ambil data brand dan category secara manual
-            const brand = await Brand.findOne({ where: { id: product.brand_id}, attributes: { exclude: ['createdAt', 'updatedAt'] }});;
-            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] }});
+            const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
 
             return {
                 id: product.id,
@@ -104,7 +114,7 @@ export const getProducts = async (req, res) => {
                 brand: brand,
                 category: category,
                 specifications: specifications.map(spec => ({
-                    name: spec.name,
+                    spec_opt_id: spec.spec_opt_id,
                     value: spec.value,
                 })),
                 pictures: pictures.map(pic => pic.image_url),
@@ -127,20 +137,21 @@ export const getProductById = async (req, res) => {
         });
 
         if (!product) {
-            return serverNotFound(res, 'Product not found'); // Mengganti dengan serverNotFound
+            return serverNotFound(res, 'Product not found');
         }
 
         const specifications = await ProductSpecification.findAll({
             where: { product_id: product.id },
+            order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
         });
 
         const pictures = await ProductImage.findAll({
             where: { product_id: product.id },
+            order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
         });
 
-        // Ambil data brand dan category secara manual dengan kondisi yang benar
-        const brand = await Brand.findOne({ where: { id: product.brand_id },  attributes: { exclude: ['createdAt', 'updatedAt'] }});
-        const category = await Category.findOne({ where: { id: product.category_id },  attributes: { exclude: ['createdAt', 'updatedAt'] }});
+        const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+        const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
 
         const formattedProduct = {
             id: product.id,
@@ -149,7 +160,7 @@ export const getProductById = async (req, res) => {
             brand: brand,
             category: category,
             specifications: specifications.map(spec => ({
-                name: spec.name,
+                spec_opt_id: spec.spec_opt_id,
                 value: spec.value,
             })),
             pictures: pictures.map(pic => pic.image_url),
@@ -246,71 +257,86 @@ export const updateProduct = async (req, res) => {
     const transaction = await sequelize.transaction(); // Mulai transaksi
 
     try {
-        const { id } = req.params; // Ambil id dari parameter
-        const { name, description, brand_id, category_id, specification_data, picture_data } = req.body;
+        const { id } = req.params;
+        const {
+            name, description, brand_id, category_id, specification_data,
+            pictures, new_thumbnail_base64, new_galery_base64
+        } = req.body;
 
-        // Validasi input: Pastikan setidaknya satu field diisi untuk diperbarui
-        if (!name && !description && !brand_id && !category_id && !specification_data && !picture_data) {
+        if (!name && !description && !brand_id && !category_id && !specification_data && !pictures) {
             return serverBadRequest(res, 'At least one field is required to update.');
         }
 
-        // Cek apakah produk yang akan diperbarui ada
         const existingProduct = await Product.findOne({ where: { id } });
         if (!existingProduct) {
-            return serverNotFound(res, 'Product not found'); // Mengganti dengan serverNotFound
+            return serverNotFound(res, 'Product not found');
         }
 
-        // Update produk
         await Product.update({
-            name,
-            description,
-            brand_id,
-            category_id
+            name, description, brand_id, category_id
         }, {
             where: { id },
             transaction
         });
 
-        // Hapus spesifikasi yang ada (opsional, tergantung pada kebutuhan Anda)
+        // Update atau Hapus dan buat spesifikasi baru
         await ProductSpecification.destroy({
             where: { product_id: id },
             transaction
         });
 
-        // Simpan `specification_data` yang baru
         if (specification_data) {
             for (const spec of specification_data) {
                 await ProductSpecification.create({
-                    product_id: id,
-                    ...spec
+                    product_id: id, ...spec
                 }, { transaction });
             }
         }
 
-        // Hapus gambar yang ada (opsional, tergantung pada kebutuhan Anda)
-        await ProductImage.destroy({
-            where: { product_id: id },
-            transaction
-        });
+        // Update gambar utama (thumbnail)
+        if (new_thumbnail_base64) {
+            try {
+                // Hapus thumbnail lama
+                await ProductImage.destroy({
+                    where: { product_id: id, index: 0 },
+                    transaction
+                });
+                // Hapus file di Firebase
+                await deleteFromFirebase(`${id}_image_0`);
+            } catch (error) {
 
-        // Simpan `picture_data` yang baru
-        if (picture_data) {
-            for (const pict of picture_data) {
-                await ProductImage.create({
-                    product_id: id,
-                    index: pict.index, // Pastikan index ada dalam `pict`
-                    image_url: pict.image_url // Ambil URL gambar dari properti image_url
-                }, { transaction });
             }
+            const thumbnailUrl = await uploadToFirebase(new_thumbnail_base64, `${id}_image_0`);
+            await ProductImage.create({
+                product_id: id,
+                index: 0,
+                image_url: thumbnailUrl
+            }, { transaction });
         }
 
-        // Commit transaksi jika semua langkah berhasil
+        // // Update galeri gambar
+        // if (new_galery_base64) {
+        //     await ProductImage.destroy({
+        //         where: { product_id: id, index: { [Op.ne]: 0 } },
+        //         transaction
+        //     });
+
+        //     for (const [index, pict] of new_galery_base64.entries()) {
+        //         const fileName = `${id}_image_${index + 1}`;
+        //         await deleteFromFirebase(fileName); // Hapus file lama
+        //         const imageUrl = await uploadToFirebase(pict, fileName); // Unggah file baru
+
+        //         await ProductImage.create({
+        //             product_id: id,
+        //             index: index + 1,
+        //             image_url: imageUrl
+        //         }, { transaction });
+        //     }
+        // }
         await transaction.commit();
         return serverSuccess(res, 'Product updated successfully');
     } catch (error) {
-        // Rollback transaksi jika ada error
         await transaction.rollback();
-        console.error(error);
         return serverError(res, 'Failed to update product');
     }
 };
