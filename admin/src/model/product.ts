@@ -6,7 +6,7 @@ import { ProductSpecification } from "./product_specification";
 export class ProductModel {
     id: number;
     name: string;
-    description?: string; // Optional jika tidak selalu ada
+    description: string; // Optional jika tidak selalu ada
     brand: Brand;
     category: Category;
     specifications: ProductSpecification[];
@@ -18,22 +18,10 @@ export class ProductModel {
         this.description = data.description;
         this.brand = new Brand(data.brand);
         this.category = new Category(data.category);
-        this.specifications = data.specifications.map((spec: any) => new ProductSpecification(spec.name, spec.value));
+        this.specifications = data.specifications.map((spec: any) => new ProductSpecification(spec));
         this.pictures = data.pictures.map((pic: any) => new ProductImage(pic));
     }
 
-    // Salinan data
-    copy(): ProductModel {
-        return new ProductModel({
-            id: this.id,
-            name: this.name,
-            description: this.description,
-            brand: { id: this.brand.id, name: this.brand.name },
-            category: { id: this.category.id, name: this.category.name },
-            specifications: this.specifications.map(spec => ({ name: spec.name, value: spec.value })),
-            pictures: this.pictures.map(pic => pic.imageUrl)
-        });
-    }
 
     // Mengubah gambar berdasarkan indeks
     changeImage(index: number, url: string): void {

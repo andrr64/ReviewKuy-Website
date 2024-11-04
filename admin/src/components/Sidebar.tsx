@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RK_FullLogo } from "../assets/logo/import";
-import { LuLogOut, LuMonitorSmartphone } from "react-icons/lu";
+import { LuLogOut, LuMonitorSmartphone, LuUser } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,7 +35,8 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Home", icon: <IoHomeOutline />, path: "/" },
-    { name: "Data Mangement", icon: <LuMonitorSmartphone />, path: "/data" },
+    { name: "Data Management", icon: <LuMonitorSmartphone />, path: "/data" },
+    { name: "User Management", icon: <LuUser />, path: "/user" },
   ];
 
   const dashboardSubItems = [
@@ -61,7 +62,7 @@ const Sidebar = () => {
 
         <ul className="space-y-2 font-medium">
           {/* Dashboard Menu with Sub-menu */}
-          <li>
+          {/* <li>
             <button
               onClick={() => setDashboardExpanded(!dashboardExpanded)}
               className="flex items-center p-2 w-full text-left rounded-lg transition duration-300 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -73,7 +74,6 @@ const Sidebar = () => {
               </span>
             </button>
 
-            {/* Animated Sub-menu */}
             <ul
               className={`pl-8 mt-1 space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${dashboardExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                 }`}
@@ -89,7 +89,7 @@ const Sidebar = () => {
                 </li>
               ))}
             </ul>
-          </li>
+          </li> */}
 
           {/* Main Menu Items */}
           {menuItems.map((item, index) => (

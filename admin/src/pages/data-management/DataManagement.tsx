@@ -1,85 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { ProductModel } from "../../model/product";
-import { fetchProducts, handleDeleteBrand, handleDeleteProduct } from "./handler";
-import RenderProducts from "./render";
-import { useNavigate } from "react-router-dom";
-import { Brand } from "../../model/brand";
-import { BRAND_CONTROLLER_deleteBrand, BRAND_CONTROLLER_getBrands } from "../../controller/brand";
-import ButtonIcon from "../../components/button/button_icon";
-import { IconAddCircle } from "../../components/icons/icon";
-import { showPrompt, showSuccess } from "../../util/alert";
-import BrandCard from "../../components/card/BrandCard";
-import { ImSad } from "react-icons/im";
+import BrandSection from "./sections/BrandSection";
+import ProductSection from "./sections/ProductSection";
 
 // Fungsi untuk merender brand
 
 
-const ProductPage: React.FC = () => {
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [products, setProducts] = useState<ProductModel[]>([]);
-  const navigate = useNavigate();
-
-  const renderBrands = (brands: Brand[]) => {
-    if (brands.length === 0) {
-      return (
-        <div className="space-y-2 flex text-base flex-col my-10 justify-center items-center">
-          <ImSad className="text-6xl"/>
-          <h1 className="text-xl">Empty :(</h1>
-        </div>
-      );
-    }
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> {/* Menggunakan grid dengan 3 kolom maksimum */}
-        {brands.map((brand) => (
-          <BrandCard
-            key={brand.id}
-            brand={brand}
-            onEdit={(x) => { }}
-            onDelete={(id) => {
-              handleDeleteBrand(id, setBrands);
-            }}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  const fetchBrand = async () => {
-    try {
-      const brandData = await BRAND_CONTROLLER_getBrands();
-      setBrands(brandData);
-    } catch (e: any) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts(setProducts);
-    fetchBrand();
-  }, []);
-
+const DataManagementPage = () => {
   return (
     <div className="p-8 space-y-8 min-h-screen">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Data Management</h1>
-
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
-        <div className="flex justify-between items-center mb-4">
-          <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Merek"} onClick={() => navigate('add-brand')} />
-        </div>
-        {/* Menggunakan fungsi renderBrands */}
-        {renderBrands(brands)}
-      </div>
-
-      <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Produk</h2>
-        <div className="flex justify-between items-center mb-4">
-          <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Produk"} onClick={() => navigate('add-product')} />
-        </div>
-        <RenderProducts products={products} onDelete={(id) => handleDeleteProduct(id, setProducts)} />
-      </div>
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Manajemen Data</h1>
+      <BrandSection />
+      <ProductSection/>
     </div>
   );
 };
 
-export default ProductPage;
+export default DataManagementPage;

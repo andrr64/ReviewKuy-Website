@@ -21,10 +21,12 @@ export default function ProductRegistrationForm() {
     const [images, setImages] = useState<File[]>([]);
     const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
     const [uploadingGallery, setUploadingGallery] = useState(false);
+
     const [brandData, setBrandData] = useState<Brand[]>([]);
-    const [categoryData, setCategoryData] = useState<{ id: number; name: string }[]>([]);
-    const [specifications, setSpecifications] = useState([{ type: "", value: "" }]);
     const [specOptions, setSpecOptions] = useState<ProductSpecificationOption[]>([]);
+    const [categoryData, setCategoryData] = useState<{ id: number; name: string }[]>([]);
+
+    const [specifications, setSpecifications] = useState([{ type: "", value: "" }]);
     const [name, setName] = useState(""); // State untuk nama produk
     const [description, setDescription] = useState(""); // State untuk deskripsi produk
     const [selectedBrand, setSelectedBrand] = useState<number | null>(null); // State untuk merek yang dipilih
@@ -117,11 +119,11 @@ export default function ProductRegistrationForm() {
             }));
 
             // Bentuk `picture_data` dengan thumbnail sebagai `index: 0` dan sisanya untuk galeri
-            const picture_data = [
-                { index: 0, base64_img: thumbnailBase64 },
-                ...galleryBase64.map((base64_img, idx) => ({
+            const pictures = [
+                { index: 0, base64: thumbnailBase64 },
+                ...galleryBase64.map((base64, idx) => ({
                     index: idx + 1, // indeks dimulai dari 1 untuk galeri
-                    base64_img
+                    base64
                 }))
             ];
 
@@ -132,14 +134,19 @@ export default function ProductRegistrationForm() {
                 brand_id: selectedBrand,
                 category_id: selectedCategory,
                 specification_data,
-                picture_data
+                pictures
             };
+
+            console.log(productData);
+            
             const response = await axios.post('/api/admin/feature/product/create', productData);
             if (response.status === 201) {
                 await showSuccess('Ok', 'Data berhasil disimpan');
                 resetForm();
             }
         } catch (error: any) {
+            console.log(error);
+            
             await showFailed('Error', error.response.data.message);
             return;
         }

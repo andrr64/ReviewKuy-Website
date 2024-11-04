@@ -3,6 +3,7 @@ import React from "react";
 import { ProductModel } from "../../model/product";
 import ProductCard from "../../components/card/ProductCard";
 import { ImSad } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 
 interface RenderProductsProps {
   products: ProductModel[];
@@ -10,23 +11,24 @@ interface RenderProductsProps {
 }
 
 const RenderProducts: React.FC<RenderProductsProps> = ({ products, onDelete }) => {
+  const navigate = useNavigate();
   if (products.length === 0) {
     return (
       <div className="space-y-2 flex text-base flex-col my-10 justify-center items-center">
-        <ImSad className="text-6xl"/>
+        <ImSad className="text-6xl" />
         <h1 className="text-xl">Empty :(</h1>
       </div>
     );
   }
 
   return (
-    <ul className="space-y-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"> {/* Menggunakan grid dengan 3 kolom maksimum */}
       {products.map((product) => (
-        <li key={product.id}>
-          <ProductCard onEdit={() => {}} onDelete={() => onDelete(product.id)} product={product} />
-        </li>
+        <ProductCard key={product.id} onEdit={(data) => {
+          navigate(`/data/edit-product/${data.id}`)
+        }} onDelete={() => onDelete(product.id)} product={product} />
       ))}
-    </ul>
+    </div>
   );
 };
 
