@@ -1,8 +1,7 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; 
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; 
 import Brand from "../models/brand.model.js";
 import { serverBadRequest, serverCreated, serverError, serverSuccess } from "../utility/response_helper.js";
 import { firebaseApp } from "../index.js";
-
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
 const uploadToFirebase = async (base64, fileName) => {
     const storage = getStorage(firebaseApp); 
@@ -57,12 +56,13 @@ export const createBrand = async (req, res) => {
         return serverError(res, error.message);
     }
 };
+
 export const updateBrand = async (req, res) => {
     const { id } = req.params; // Mengambil ID brand dari parameter URL
-    const { name, description, logo_url } = req.body;
+    const { name, description, new_logo } = req.body;
 
     // Validasi input
-    if (!name && !description && !logo_url) {
+    if (!name && !description && !new_logo) {
         return serverBadRequest(res, 'At least one field is required to update.');
     }
 
@@ -74,14 +74,37 @@ export const updateBrand = async (req, res) => {
             return serverBadRequest(res, 'Brand not found.');
         }
 
-        // Memperbarui brand
-        const updatedBrand = await brand.update({
-            name: name || brand.name, // Hanya memperbarui jika field tidak kosong
-            description: description || brand.description,
-            logo_url: logo_url || brand.logo_url,
-        });
+        // Mendapatkan referensi storage
+        const storage = getStorage(firebaseApp);
 
-        return serverSuccess(res, 'Brand updated successfully', updatedBrand);
+        // Jika ada logo baru
+        if (new_logo) {
+            // Hapus logo lama dari Firebase Storage jika ada
+            if (brand.logo_url) {
+                const oldLogoRef = ref(storage, brand.logo_url);
+                await deleteObject(oldLogoRef);
+            }
+
+            // Upload logo baru dan ambil URL-nya
+            const fileName = `${brand.name}_logo`; // Atur nama file baru
+            const logoUrl = await uploadToFirebase(new_logo, fileName);
+
+            // Memperbarui brand dengan logo baru
+            await brand.update({
+                name: name || brand.name, // Hanya memperbarui jika field tidak kosong
+                description: description || brand.description,
+                logo_url: logoUrl, // Gunakan URL logo baru
+            });
+        } else {
+            // Memperbarui brand tanpa mengubah logo
+            await brand.update({
+                name: name || brand.name,
+                description: description || brand.description,
+                logo_url: brand.logo_url, // Tetap gunakan logo yang lama
+            });
+        }
+
+        return res.status(200).send(brand);
     } catch (error) {
         return serverError(res, error.message);
     }
@@ -139,9 +162,7 @@ export const getBrandById = async (req, res) => {
         if (!brand) {
             return serverBadRequest(res, 'Brand not found.');
         }
-
-        // Mengembalikan response dengan detail brand
-        return serverSuccess(res, 'Brand retrieved successfully', brand);
+        return res.status(200).send(brand);
     } catch (error) {
         return serverError(res, error.message);
     }

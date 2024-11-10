@@ -5,8 +5,9 @@ import LoginController from "./pages/login/LoginController";
 import DataManagementPage from "./pages/data-management/DataManagement";
 import ProductRegistrationForm from "./pages/data-management/add-product/AddProduct";
 import FormLayout from "./layout/FormLayout";
-import BrandForm from "./pages/data-management/add-brand/AddBrand";
+import AddBrandForm from "./pages/data-management/add-brand/AddBrand";
 import ProductEditForm from "./pages/data-management/edit-product/EditProduct";
+import EditBrandForm from "./pages/data-management/edit-brand/EditBrand";
 
 export default function App() {
   return (
@@ -30,9 +31,15 @@ export default function App() {
 
             <Route path="/data/add-brand" element={
               <FormLayout title="Tambah Merek" desc="Silakan masukkan detail merek untuk registrasi.">
-                <BrandForm />
+                <AddBrandForm />
               </FormLayout>}
             />
+            <Route path="/data/edit-brand/:id" element={
+              <FormLayout title="Edit Merek" desc="Silakan masukkan detail merek untuk diperbaharui.">
+                <EditBrandForm />
+              </FormLayout>}
+            />
+            
           </Route>
         </Route>
       </Routes>

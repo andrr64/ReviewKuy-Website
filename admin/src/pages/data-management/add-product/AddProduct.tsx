@@ -14,6 +14,7 @@ import { PRODUCT_SPEC_OPT_CONTROLLER_getOptions } from "../../../controller/prod
 import { ProductSpecificationOption } from "../../../model/product.specification.option";
 import { showFailed, showSuccess } from "../../../util/alert";
 import axios from "axios";
+import { Button } from "antd";
 
 // Fungsi untuk form registrasi produk
 export default function ProductRegistrationForm() {
@@ -138,7 +139,7 @@ export default function ProductRegistrationForm() {
             };
 
             console.log(productData);
-            
+
             const response = await axios.post('/api/admin/feature/product/create', productData);
             if (response.status === 201) {
                 await showSuccess('Ok', 'Data berhasil disimpan');
@@ -146,14 +147,14 @@ export default function ProductRegistrationForm() {
             }
         } catch (error: any) {
             console.log(error);
-            
+
             await showFailed('Error', error.response.data.message);
             return;
         }
     };
 
     return (
-        <form className="mt-6 flex gap-6 text-l" onSubmit={handleSubmit}>
+        <form className="mt-6 flex gap-6 text-sm" onSubmit={handleSubmit}>
             {/* Kolom Detail Produk */}
             <div className="space-y-4 flex-1">
                 <div>
@@ -246,19 +247,18 @@ export default function ProductRegistrationForm() {
                             </button>
                         </div>
                     ))}
+
                     {/* Tombol untuk menambah spesifikasi baru */}
-                    <button
-                        type="button"
-                        onClick={handleAddSpecification}
-                        className="bg-blue-500 hover:bg-blue-600 w-1/2 text-white rounded-md p-2 mt-2"
-                    >
-                        Tambah Spesifikasi
-                    </button>
+                    <div className="flex justify-center w-full">
+                        <Button color="primary" variant="outlined" onClick={handleAddSpecification} className="w-1/2">
+                            Tambah Spesifikasi
+                        </Button>
+                    </div>
                 </div>
 
-                <button type="submit" className="mt-6 w-full btn-dark">
+                <Button className="w-full" htmlType="submit" type="primary" >
                     Tambahkan Produk
-                </button>
+                </Button>
             </div>
 
             {/* Kolom Upload Gambar */}

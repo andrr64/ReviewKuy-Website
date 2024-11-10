@@ -3,8 +3,10 @@ import { FaTrash } from "react-icons/fa";
 import { toBase64 } from "../../../util/fileConverter";
 import { BRAND_CONTROLLER_addBrand } from "../../../controller/brand";
 import { showFailed, showSuccess } from "../../../util/alert";
+import { useDispatch } from "react-redux";
+import { loadingEnd, loadingStart, setLoading } from "../../../state/loading/loadingSlicer";
 
-function BrandForm() {
+function AddBrandForm() {
   const [logoFile, setLogoFile] = useState<File | null>(null); // State untuk file logo
   const [isUploading, setIsUploading] = useState(false); // State untuk status upload
   const [logoPreview, setLogoPreview] = useState<string | null>(null); // State untuk preview logo
@@ -13,8 +15,11 @@ function BrandForm() {
     description: "", // State untuk deskripsi produk
   });
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    dispatch(loadingStart());
     const data = {
       ...formData,
       logo: logoFile ? await toBase64(logoFile) : null,
@@ -22,8 +27,9 @@ function BrandForm() {
     try {
       const response = await BRAND_CONTROLLER_addBrand(data);
       if (response) {
+        dispatch(loadingEnd());
         showSuccess('Success', 'Merek berhasil disimpan!');
-        
+
         // Reset form setelah sukses
         setFormData({ name: "", description: "" });
         setLogoFile(null);
@@ -31,6 +37,7 @@ function BrandForm() {
       }
     } catch (error: any) {
       console.log(error);
+      dispatch(loadingEnd());
       showFailed('Error', error.response.data.message);
     }
   };
@@ -64,7 +71,7 @@ function BrandForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-1/2 mt-6 gap-6 text-l">
+    <form onSubmit={handleSubmit} className="w-1/2 mt-6 gap-6 text-sm">
       <div className="space-y-4 flex-1">
         <div>
           <label htmlFor="name" className="block text-gray-800 font-medium">Nama</label>
@@ -135,4 +142,4 @@ function BrandForm() {
   );
 }
 
-export default BrandForm;
+export default AddBrandForm;

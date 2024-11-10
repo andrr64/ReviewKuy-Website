@@ -10,11 +10,11 @@ export const BRAND_CONTROLLER_getBrands = async (): Promise<Brand[]> => {
 
 };
 
-export const BRAND_CONTROLLER_getBrandById = async (brandId: number): Promise<Brand> => {
+export const BRAND_CONTROLLER_getBrandById = async (brandId: any): Promise<Brand> => {
     return await axios.get(`/api/brand/${brandId}`);
 };
 
-export const BRAND_CONTROLLER_updateBrand = async (brandId: number, brandData: Partial<Brand>): Promise<Brand> => {
+export const BRAND_CONTROLLER_updateBrand = async (brandId: any, brandData: Partial<Brand>): Promise<Brand> => {
     return await axios.put(`/api/admin/feature/brand/update/${brandId}`, brandData);
 };
 
