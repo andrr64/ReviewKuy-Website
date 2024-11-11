@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import ProfileCard from '../../../components/card/UserCard'
 import SearchBar from '../../../components/search-bar/SearchBar'
 import { Button } from 'antd';
-import { UserController } from '../../../controller/user';
+import { UserAPI } from '../../../api/user';
 import { UserModel } from '../../../model/user';
 import MemberTotalCard from '../../../components/card/MemberCard';
 
@@ -14,7 +14,7 @@ function UserData() {
     const handleSearch = async (query: string) => {
         setSearch(query);
         try {
-            const response = await UserController.search(query);
+            const response = await UserAPI.search(query);
             const data = response.map((e: any) => {
                 return new UserModel(e);
             });
@@ -30,7 +30,7 @@ function UserData() {
 
     const fetchTotalUser = async () => {
         try {
-            setTotaluser((await UserController.getTotalUser()));
+            setTotaluser((await UserAPI.getTotalUser()));
         } catch (error) {
             setTotaluser('Something Wrong');
         }

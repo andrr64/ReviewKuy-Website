@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { PRODUCT_SPEC_OPT_CONTROLLER_addData, PRODUCT_SPEC_OPT_CONTROLLER_deleteData, PRODUCT_SPEC_OPT_CONTROLLER_getOptions, PRODUCT_SPEC_OPT_CONTROLLER_updateData } from "../../../controller/product.specification.option";
 import { ProductSpecificationOption } from "../../../model/product.specification.option";
 import { Button, Input, Modal } from "antd";
 import { showFailed, showPrompt, showSuccess, showWarning } from "../../../util/alert";
 import { useDispatch } from "react-redux";
 import { loadingEnd, loadingStart } from "../../../state/loading/loadingSlicer";
+import { SpecificationOptAPI } from "../../../api/product.specification.option";
 
 function SpecificationDataSection() {
     const [specOptData, setSpecOptData] = useState<ProductSpecificationOption[] | null>(null);
@@ -19,7 +19,7 @@ function SpecificationDataSection() {
 
     const fetchSpecOptData = async () => {
         try {
-            const response = await PRODUCT_SPEC_OPT_CONTROLLER_getOptions();
+            const response = await SpecificationOptAPI.getOptions();
             setSpecOptData(response);
         } catch (error) {
             console.error("Error fetching specification options:", error);
@@ -40,7 +40,7 @@ function SpecificationDataSection() {
         dispatch(loadingStart());
         try {
             if (newSpecOpt.trim()) {
-                const newSpec: ProductSpecificationOption = await PRODUCT_SPEC_OPT_CONTROLLER_addData(newSpecOpt);
+                const newSpec: ProductSpecificationOption = await SpecificationOptAPI.addData(newSpecOpt);
                 setSpecOptData((prevData) => [...(prevData || []), newSpec]);
                 setNewSpecOpt("");
                 await showSuccess("Berhasil", "Data berhasil disimpan");
@@ -68,7 +68,7 @@ function SpecificationDataSection() {
         }
         dispatch(loadingStart());
         try {
-            await PRODUCT_SPEC_OPT_CONTROLLER_updateData(editSpecOpt);
+            await SpecificationOptAPI.updateData(editSpecOpt);
             await fetchSpecOptData();
             await showSuccess("Berhasil", "Data berhasil diperbarui");
             setIsEditModalVisible(false);
@@ -83,7 +83,7 @@ function SpecificationDataSection() {
         if (confirmed) {
             dispatch(loadingStart());
             try {
-                const response = await PRODUCT_SPEC_OPT_CONTROLLER_deleteData(data.id);
+                const response = await SpecificationOptAPI.deleteData(data.id);
                 if (response === true) {
                     await fetchSpecOptData();
                     showSuccess("Berhasil", "Data berhasil dihapus");

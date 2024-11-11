@@ -1,22 +1,23 @@
 import { ImSad } from "react-icons/im";
 import BrandCard from "../../../components/card/BrandCard";
-import { IconAddCircle } from "../../../components/icons/icon"
 import { Brand } from "../../../model/brand"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BRAND_CONTROLLER_deleteBrand, BRAND_CONTROLLER_getBrands } from "../../../controller/brand";
 import { showFailed, showPrompt, showSuccess } from "../../../util/alert";
-import ButtonIcon from "../../../components/button/button_icon";
 import { Button } from "antd";
+import SearchBar from "../../../components/search-bar/SearchBar";
+import { BrandAPI } from "../../../api/brand";
 
 function BrandSection() {
     const [brands, setBrands] = useState<Brand[]>([]);
+    const [searchResult, setSearchResult] = useState<Brand[]>([]);
     const navigate = useNavigate();
+
     const handleDeleteBrand = async (brand_id: number, setBrands: React.Dispatch<React.SetStateAction<Brand[]>>) => {
         try {
             const confirm = await showPrompt('Hapus', 'Anda yakin? data tidak bisa dikembalikan.');
             if (confirm) {
-                const response: any = await BRAND_CONTROLLER_deleteBrand(brand_id);
+                const response: any = await BrandAPI.deleteBrand(brand_id);
                 if (response.status === 200) {
                     await showSuccess('Success', 'Data berhasil dihapus');
                     // Menghapus brand dari state
@@ -27,9 +28,14 @@ function BrandSection() {
             showFailed("Gagal", error.response.data.message);
         }
     };
+    const handleSearch = async (query: string) => {
+        const response = await BrandAPI.searchBrand(query);
+        console.log(response);
+    }
+
     const fetchBrand = async () => {
         try {
-            const brandData = await BRAND_CONTROLLER_getBrands();
+            const brandData = await BrandAPI.getBrands();
             setBrands(brandData);
         } catch (e: any) {
             console.log(e);
@@ -67,11 +73,10 @@ function BrandSection() {
         );
     };
     return (
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white shadow rounded-lg space-y-4 p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
-            <div className="flex justify-between items-center mb-4">
-                <Button type="primary" onClick={() => navigate('add-brand')}>Tambah Merek</Button>
-            </div>
+            <SearchBar onSearch={handleSearch} />
+            <Button type="primary" onClick={() => navigate('add-brand')}>Tambah Merek</Button>
             {/* Menggunakan fungsi renderBrands */}
             {renderBrands(brands)}
         </div>

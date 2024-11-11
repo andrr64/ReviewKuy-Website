@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { toBase64 } from "../../../util/fileConverter";
-import { BRAND_CONTROLLER_addBrand } from "../../../controller/brand";
 import { showFailed, showSuccess } from "../../../util/alert";
 import { useDispatch } from "react-redux";
 import { loadingEnd, loadingStart, setLoading } from "../../../state/loading/loadingSlicer";
+import { BrandAPI } from "../../../api/brand";
 
 function AddBrandForm() {
   const [logoFile, setLogoFile] = useState<File | null>(null); // State untuk file logo
@@ -25,7 +25,7 @@ function AddBrandForm() {
       logo: logoFile ? await toBase64(logoFile) : null,
     };
     try {
-      const response = await BRAND_CONTROLLER_addBrand(data);
+      const response = await BrandAPI.addBrand(data);
       if (response) {
         dispatch(loadingEnd());
         showSuccess('Success', 'Merek berhasil disimpan!');

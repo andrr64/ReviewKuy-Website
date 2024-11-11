@@ -1,13 +1,10 @@
 import { useState, useEffect, useReducer } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Brand } from "../../../model/brand";
-import { CATEGORY_CONTROLLER_getCategories } from "../../../controller/category";
-import { PRODUCT_SPEC_OPT_CONTROLLER_getOptions } from "../../../controller/product.specification.option";
 import { ProductSpecificationOption } from "../../../model/product.specification.option";
-import { BRAND_CONTROLLER_getBrands } from "../../../controller/brand";
+import { BRAND_CONTROLLER_getBrands } from "../../../api/brand";
 import { useParams } from "react-router-dom";
 import { ProductModel } from "../../../model/product";
-import { PRODUCT_CONTROLLER_getProductById } from "../../../controller/product";
 import RKTextInput from "../../../components/form/RKTextInput";
 import RKTextArea from "../../../components/form/RKTextArea";
 import { RKSelect } from "../../../components/form/RKSelect";
@@ -18,6 +15,9 @@ import { showSuccess } from "../../../util/alert";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../state/loading/loadingSlicer";
 import { Button } from 'antd';
+import { ProductAPI } from "../../../api/product";
+import { SpecificationOptAPI } from "../../../api/product.specification.option";
+import { CategoryAPI } from "../../../api/category";
 
 export default function EditProductForm() {
     const [newThumbnail, setNewThumbnail] = useState<File | null>(null);
@@ -68,7 +68,7 @@ export default function EditProductForm() {
 
     const fetchCategories = async () => {
         try {
-            const categories = await CATEGORY_CONTROLLER_getCategories();
+            const categories = await CategoryAPI.getCategories();
             setCategoryData(categories);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -77,7 +77,7 @@ export default function EditProductForm() {
 
     const fetchSpecOption = async () => {
         try {
-            const specOptionData: ProductSpecificationOption[] = await PRODUCT_SPEC_OPT_CONTROLLER_getOptions();
+            const specOptionData: ProductSpecificationOption[] = await SpecificationOptAPI.getOptions();
             setSpecOptions(specOptionData);
         } catch (error) {
             console.error('Error fetching specification options:', error);
@@ -86,7 +86,7 @@ export default function EditProductForm() {
 
     const fetchProductData = async () => {
         try {
-            const product = await PRODUCT_CONTROLLER_getProductById(id as any);
+            const product = await ProductAPI.getProductById(id as any);
             setProduct(product);
             setName(product.name);
             setDescription(product.description);

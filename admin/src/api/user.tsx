@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export class UserController {
+export class UserAPI {
     static async search(name: string){
         try {
             const response = await axios.post('/api/admin/feature/user/search', {

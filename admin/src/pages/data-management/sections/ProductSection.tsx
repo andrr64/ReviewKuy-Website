@@ -3,11 +3,9 @@ import RenderProducts from "../render";
 import { ProductModel } from "../../../model/product";
 import { useNavigate } from "react-router-dom";
 import { showFailed, showPrompt, showSuccess } from "../../../util/alert";
-import { PRODUCT_CONTROLLER_deleteProduct, PRODUCT_CONTROLLER_getProducts } from "../../../controller/product";
-import ButtonIcon from "../../../components/button/button_icon";
-import { IconAddCircle } from "../../../components/icons/icon";
 import SearchBar from "../../../components/search-bar/SearchBar";
 import { Button } from "antd";
+import { ProductAPI } from "../../../api/product";
 
 export default function ProductSection() {
     const navigate = useNavigate();
@@ -20,7 +18,7 @@ export default function ProductSection() {
                 "Anda yakin ingin menghapus produk? data yang dihapus tidak bisa dikembalikan."
             );
             if (confirm) {
-                await PRODUCT_CONTROLLER_deleteProduct(id);
+                await ProductAPI.deleteProduct(id);
 
                 // Jika berhasil, tampilkan info dan hapus produk dari state
                 await showSuccess('Success', 'Data berhasil dihapus');
@@ -37,7 +35,7 @@ export default function ProductSection() {
     }, []);
     const fetchProducts = async (setProducts: React.Dispatch<React.SetStateAction<ProductModel[]>>) => {
         try {
-            const productData = await PRODUCT_CONTROLLER_getProducts();
+            const productData = await ProductAPI.getProducts();
             setProducts(productData); // Update state dengan data produk
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -47,7 +45,7 @@ export default function ProductSection() {
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Produk</h2>
             <div className="mb-4 space-y-4">
-                <SearchBar />
+                <SearchBar onSearch={(query) => {}} />
                 <Button type="primary" onClick={() => navigate('add-product')}>Tambah Produk</Button>
             </div>
             <RenderProducts products={products} onDelete={(id) => handleDeleteProduct(id, setProducts)} />

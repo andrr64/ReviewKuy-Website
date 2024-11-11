@@ -8,6 +8,7 @@ import FormLayout from "./layout/FormLayout";
 import AddBrandForm from "./pages/data-management/add-brand/AddBrand";
 import ProductEditForm from "./pages/data-management/edit-product/EditProduct";
 import EditBrandForm from "./pages/data-management/edit-brand/EditBrand";
+import UserManagement from "./pages/user-management/UserManagement";
 
 export default function App() {
   return (
@@ -28,7 +29,6 @@ export default function App() {
                 <ProductEditForm />
               </FormLayout>
             } />
-
             <Route path="/data/add-brand" element={
               <FormLayout title="Tambah Merek" desc="Silakan masukkan detail merek untuk registrasi.">
                 <AddBrandForm />
@@ -39,7 +39,7 @@ export default function App() {
                 <EditBrandForm />
               </FormLayout>}
             />
-            
+            <Route path="user" element={<UserManagement/>} />
           </Route>
         </Route>
       </Routes>

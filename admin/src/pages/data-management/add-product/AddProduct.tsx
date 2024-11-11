@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Brand } from "../../../model/brand";
-import { BRAND_CONTROLLER_getBrands } from "../../../controller/brand";
-import { CATEGORY_CONTROLLER_getCategories } from "../../../controller/category"; // Import CATEGORY_CONTROLLER
+import { BRAND_CONTROLLER_getBrands } from "../../../api/brand";
 import {
     handleThumbnailUpload,
     handleImageUpload,
@@ -10,11 +9,12 @@ import {
     handleClearAllImages,
     handleDeleteThumbnail
 } from "./handler"; // Impor semua fungsi handler
-import { PRODUCT_SPEC_OPT_CONTROLLER_getOptions } from "../../../controller/product.specification.option";
 import { ProductSpecificationOption } from "../../../model/product.specification.option";
 import { showFailed, showSuccess } from "../../../util/alert";
 import axios from "axios";
 import { Button } from "antd";
+import { CategoryAPI } from "../../../api/category";
+import { SpecificationOptAPI } from "../../../api/product.specification.option";
 
 // Fungsi untuk form registrasi produk
 export default function ProductRegistrationForm() {
@@ -64,7 +64,7 @@ export default function ProductRegistrationForm() {
 
         const fetchCategories = async () => {
             try {
-                const categories = await CATEGORY_CONTROLLER_getCategories();
+                const categories = await CategoryAPI.getCategories();
                 setCategoryData(categories);
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -73,7 +73,7 @@ export default function ProductRegistrationForm() {
 
         const fetchSpecOption = async () => {
             try {
-                const specOptionData: ProductSpecificationOption[] = await PRODUCT_SPEC_OPT_CONTROLLER_getOptions();
+                const specOptionData: ProductSpecificationOption[] = await SpecificationOptAPI.getOptions();
                 setSpecOptions(specOptionData); // Simpan data spesifikasi yang diambil ke dalam state
             } catch (error) {
                 console.error('Error fetching specification options:', error);

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { toBase64 } from "../../../util/fileConverter";
-import { BRAND_CONTROLLER_getBrandById, BRAND_CONTROLLER_updateBrand } from "../../../controller/brand";
 import { showFailed, showSuccess } from "../../../util/alert";
 import { Brand } from "../../../model/brand";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../state/loading/loadingSlicer";
+import { BrandAPI } from "../../../api/brand";
 
 function EditBrandForm() {
     const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -20,7 +20,7 @@ function EditBrandForm() {
     const dispatch = useDispatch();
 
     const fetchData = async () => {
-        const response: any = await BRAND_CONTROLLER_getBrandById(id);
+        const response: any = await BrandAPI.getBrandById(id);
         const oldBrandData = new Brand(response.data);
         setOldLogoUrl(oldBrandData.logo_url);
         setFormData(oldBrandData.toForm());
@@ -41,7 +41,7 @@ function EditBrandForm() {
         };
         
         try {
-            const response: any = await BRAND_CONTROLLER_updateBrand(id, data);
+            const response: any = await BrandAPI.updateBrand(id, data);
             if (response) {
                 await showSuccess('Success', 'Merek berhasil disimpan!');
                 setLogoFile(null);
