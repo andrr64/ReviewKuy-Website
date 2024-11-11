@@ -10,6 +10,7 @@ import {
     serverSuccess,
     serverUnauthorized
 } from '../utility/response_helper.js';
+import { Op } from 'sequelize'; // Pastikan Op diimpor untuk menggunakan operator LIKE
 
 const saltRounds = 12;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,41 @@ const verifyInput = (name, email, password) => {
         return { valid: false, message: 'Invalid email format.' };
     }
     return { valid: true };
+};
+
+// Fungsi untuk mendapatkan pengguna berdasarkan nama mirip
+export const getUserByName = async (req, res) => {
+    const { name } = req.body;
+
+    if (!name) {
+        return serverBadRequest(res, 'Name is required.');
+    }
+
+    try {
+        // Menggunakan operator LIKE untuk mencari nama yang mengandung nilai 'nama' dari req.body
+        const users = await User.findAll({
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`, // mencari nama yang mengandung substring 'nama'
+                }
+            }
+        });
+
+        if (users.length === 0) {
+            return serverNotFound(res, 'No users found with a similar name.');
+        }
+
+        // Mengembalikan daftar pengguna yang namanya mirip dengan nama yang dicari
+        return res.status(200).send(users.map(user => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar
+        })));
+    } catch (error) {
+        console.error('Error fetching users by similar name:', error);
+        return serverError(res, 'Something went wrong, please try again later.');
+    }
 };
 
 // Fungsi untuk membuat pengguna baru
