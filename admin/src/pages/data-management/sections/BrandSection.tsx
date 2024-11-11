@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { BRAND_CONTROLLER_deleteBrand, BRAND_CONTROLLER_getBrands } from "../../../controller/brand";
 import { showFailed, showPrompt, showSuccess } from "../../../util/alert";
 import ButtonIcon from "../../../components/button/button_icon";
+import { Button } from "antd";
 
 function BrandSection() {
     const [brands, setBrands] = useState<Brand[]>([]);
@@ -69,7 +70,7 @@ function BrandSection() {
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
             <div className="flex justify-between items-center mb-4">
-                <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Merek"} onClick={() => navigate('add-brand')} />
+                <Button type="primary" onClick={() => navigate('add-brand')}>Tambah Merek</Button>
             </div>
             {/* Menggunakan fungsi renderBrands */}
             {renderBrands(brands)}

@@ -18,7 +18,7 @@ const BrandCard: React.FC<BrandCardProps> = ({ brand, onEdit, onDelete }) => {
                 />
             </div>
             <span className="block text-xl font-bold text-gray-800 mb-2">{brand.name}</span>
-            <p className="text-gray-600 text-sm mb-4">Deskripsi: {brand.description}</p>
+            <p className="text-gray-600 text-sm mb-4">{brand.description}</p>
             <div className="flex justify-between mt-auto">
                 <Button color="primary" variant="filled" onClick={() => onEdit(brand)}>Ubah</Button>
                 <Button color="danger" variant="filled" onClick={() => onDelete(brand.id)}>Hapus</Button>

@@ -7,6 +7,7 @@ import { PRODUCT_CONTROLLER_deleteProduct, PRODUCT_CONTROLLER_getProducts } from
 import ButtonIcon from "../../../components/button/button_icon";
 import { IconAddCircle } from "../../../components/icons/icon";
 import SearchBar from "../../../components/search-bar/SearchBar";
+import { Button } from "antd";
 
 export default function ProductSection() {
     const navigate = useNavigate();
@@ -46,8 +47,8 @@ export default function ProductSection() {
         <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Produk</h2>
             <div className="mb-4 space-y-4">
-                <SearchBar/>
-                <ButtonIcon icon={<IconAddCircle size={'1.5rem'} />} text={"Tambah Produk"} onClick={() => navigate('add-product')} />
+                <SearchBar />
+                <Button type="primary" onClick={() => navigate('add-product')}>Tambah Produk</Button>
             </div>
             <RenderProducts products={products} onDelete={(id) => handleDeleteProduct(id, setProducts)} />
         </div>
