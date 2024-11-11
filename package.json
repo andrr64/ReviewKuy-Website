@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon server/index.js",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "dev": "concurrently \"nodemon server/index.js\" \"npm run dev --prefix client\" \"npm run dev --prefix admin\""
   },
   "keywords": [],
   "author": "Derza Andreas (andrrbussines15@gmail.com)",
