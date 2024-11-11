@@ -4,7 +4,7 @@ import { createCategory, deleteCategory, updateCategory } from '../controllers/c
 import { createAdmin, updateAdmin } from '../controllers/admin.controller.js';
 import { createProduct, deleteProduct, updateProduct } from '../controllers/product.controller.js';
 import { createSpecOption, deleteSpecOption, updateSpecOption } from '../controllers/product.specification.option.controller.js';
-import { getUserByName } from '../controllers/user.controller.js';
+import { getUserByName, getUserTotal } from '../controllers/user.controller.js';
 const router = express.Router();
 
 router.post('/brand/create', createBrand);
@@ -22,7 +22,8 @@ router.post('/product/create', createProduct)
 router.put('/product/update/:id', updateProduct);
 router.delete('/product/delete/:id', deleteProduct);
 
-router.get('/user/search', getUserByName);
+router.post('/user/search', getUserByName);
+router.get('/user/total', getUserTotal);
 
 router.post('/product/specification/option/create', createSpecOption);
 router.post('/product/specification/option/update', updateSpecOption);

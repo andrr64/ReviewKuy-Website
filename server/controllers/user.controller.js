@@ -64,6 +64,17 @@ export const getUserByName = async (req, res) => {
     }
 };
 
+export const getUserTotal = async(req, res) => {
+    try {
+        // Menghitung jumlah total pengguna
+        const totalUsers = await User.count();
+        // Mengirimkan jumlah total pengguna menggunakan res.send()
+        return res.status(200).json(totalUsers);
+    } catch (error) {
+        return serverError(res, error);
+    }
+}
+
 // Fungsi untuk membuat pengguna baru
 export const createUser = async (req, res) => {
     const { name, email, password } = req.body;
