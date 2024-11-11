@@ -16,7 +16,7 @@ const LoadingModal: React.FC<LoadingModalProps> = ({ loading }) => {
                   Loading...
                 </span>
               </div>
-              <p className="text-gray-800 mt-4">Mengunggah, silakan tunggu...</p>
+              <p className="text-gray-800 mt-4">Tunggu sebentar...</p>
             </div>
           </div>
         </div>
