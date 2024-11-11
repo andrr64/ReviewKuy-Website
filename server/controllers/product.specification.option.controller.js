@@ -31,8 +31,9 @@ export const createSpecOption = async (req, res) => {
 
 // Fungsi untuk memperbarui ProductSpecificationOption berdasarkan ID
 export const updateSpecOption = async (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
+    const { name, id } = req.body;
+    console.log(req.body);
+    
     try {
         const option = await ProductSpecificationOption.findByPk(id);
         if (!option) return res.status(404).send({ message: "Option not found" });
