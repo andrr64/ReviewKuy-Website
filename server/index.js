@@ -34,10 +34,7 @@ const startServer = async () => {
     console.log('Database synchronized');
 
     // Middleware
-    app.use(cors({
-      origin: 'http://localhost:5173', // URL frontend Anda
-      credentials: true, // Mengizinkan pengiriman kredensial (cookie)
-    }));
+    app.use(cors());
 
     // Mengatur batas ukuran payload untuk JSON
     app.use(express.json({ limit: '10mb' })); // Atur batas payload menjadi 10MB
