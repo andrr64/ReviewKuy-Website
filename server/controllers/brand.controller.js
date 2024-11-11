@@ -2,6 +2,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "fire
 import Brand from "../models/brand.model.js";
 import { serverBadRequest, serverCreated, serverError, serverSuccess } from "../utility/response_helper.js";
 import { firebaseApp } from "../index.js";
+import { Op } from "sequelize";
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
 const uploadToFirebase = async (base64, fileName) => {
     const storage = getStorage(firebaseApp); 
@@ -54,6 +55,31 @@ export const createBrand = async (req, res) => {
     } catch (error) {
         console.error(error);
         return serverError(res, error.message);
+    }
+};
+
+export const searchBrand = async (req, res) => {
+    const { name } = req.body;
+
+    // Validasi input
+    if (!name) {
+        return serverBadRequest(res, 'Name is required.');
+    }
+
+    try {
+        // Cari brand dengan nama yang mengandung substring 'name' dari req.body
+        const brands = await Brand.findAll({
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`, // Menggunakan LIKE untuk mencari nama yang mengandung nilai 'name'
+                }
+            }
+        });
+
+        return res.status(200).json(brands);
+    } catch (error) {
+        console.error('Error fetching brands by name:', error);
+        return serverError(res, 'Something went wrong, please try again later.');
     }
 };
 
