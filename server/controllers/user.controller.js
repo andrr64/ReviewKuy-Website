@@ -64,6 +64,8 @@ export const getUserByName = async (req, res) => {
     }
 };
 
+const DEFAULT_AVATAR = 'https://firebasestorage.googleapis.com/v0/b/andreas-web-cloud-5c228.appspot.com/o/user.avatar%2FDefault-avatar.jpg?alt=media&token=95175b8b-04e8-4025-9fbd-c4ecd21a08a0';
+
 export const getUserTotal = async(req, res) => {
     try {
         // Menghitung jumlah total pengguna
@@ -96,6 +98,7 @@ export const createUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
+            avatar: DEFAULT_AVATAR
         });
 
         return serverCreated(res, 'User created successfully', {

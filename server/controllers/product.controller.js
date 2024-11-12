@@ -7,6 +7,7 @@ import ProductSpecification from "../models/product.specification.model.js";
 import ProductImage from "../models/product.image.model.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; // Tambahkan Firebase Storage
 import { firebaseApp } from "../index.js";
+import { Op } from "sequelize";
 
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
 const uploadToFirebase = async (base64, fileName) => {
@@ -173,7 +174,6 @@ export const getProductById = async (req, res) => {
     }
 };
 
-// Fungsi untuk mendapatkan produk berdasarkan kategori
 export const getProductByCategory = async (req, res) => {
     try {
         const { id } = req.params;
@@ -213,7 +213,6 @@ export const getProductByCategory = async (req, res) => {
     }
 };
 
-// Fungsi untuk mendapatkan produk berdasarkan brand
 export const getProductByBrand = async (req, res) => {
     try {
         const { id } = req.params;
@@ -379,5 +378,58 @@ export const deleteProduct = async (req, res) => {
         await transaction.rollback();
         console.error(error);
         return serverError(res, 'Failed to delete product');
+    }
+};
+
+export const searchProduct = async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        // Cek jika nama tidak ada di body request
+        if (!name) {
+            return res.status(400).json({ message: 'Nama produk harus diberikan' });
+        }
+
+        // Mencari produk berdasarkan nama yang mirip (LIKE)
+        const products = await Product.findAll({
+            where: {
+                name: { [Op.iLike]: `%${name}%` }
+            }
+        });
+        console.log(products);
+        
+        // Format hasil pencarian untuk setiap produk
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const specifications = await ProductSpecification.findAll({
+                where: { product_id: product.id },
+                order: [['index', 'ASC']]
+            });
+
+            const pictures = await ProductImage.findAll({
+                where: { product_id: product.id },
+                order: [['index', 'ASC']]
+            });
+
+            const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+            const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+
+            return {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                brand: brand,
+                category: category,
+                specifications: specifications.map(spec => ({
+                    spec_opt_id: spec.spec_opt_id,
+                    value: spec.value,
+                })),
+                pictures: pictures.map(pic => pic.image_url),
+            };
+        }));
+
+        return res.json(formattedProducts);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Gagal mencari produk' });
     }
 };

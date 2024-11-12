@@ -1,4 +1,4 @@
-import Vote from '../models/vote.model.js';
+import ReviewVoteModel from '../models/review.vote.model.js';
 import Review from '../models/review.model.js'; // Pastikan Anda memiliki model Review
 import { 
     serverBadRequest, 
@@ -26,7 +26,7 @@ export const createVote = async (req, res) => {
         }
 
         // Cek apakah user sudah memberikan vote untuk review ini
-        const existingVote = await Vote.findOne({
+        const existingVote = await ReviewVoteModel.findOne({
             where: {
                 review_id: reviewId,
                 user_id: userId,
@@ -38,7 +38,7 @@ export const createVote = async (req, res) => {
         }
 
         // Buat vote baru
-        const newVote = await Vote.create({
+        const newVote = await ReviewVoteModel.create({
             user_id: userId,
             review_id: reviewId,
             value,
@@ -63,7 +63,7 @@ export const updateVote = async (req, res) => {
         }
 
         // Cek apakah vote ada
-        const vote = await Vote.findOne({
+        const vote = await ReviewVoteModel.findOne({
             where: {
                 review_id: reviewId,
                 user_id: userId,
@@ -97,7 +97,7 @@ export const deleteVote = async (req, res) => {
         }
 
         // Cek apakah vote ada
-        const vote = await Vote.findOne({
+        const vote = await ReviewVoteModel.findOne({
             where: {
                 review_id: reviewId,
                 user_id: userId,
