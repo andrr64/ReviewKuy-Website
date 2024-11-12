@@ -3,7 +3,7 @@ import sequelize from '../db.js';
 import Category from './category.model.js';
 import Brand from './brand.model.js';
 
-const Product = sequelize.define('product', {
+const ProductModel = sequelize.define('product', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -41,4 +41,4 @@ const Product = sequelize.define('product', {
 });
 
 
-export default Product;
+export default ProductModel;

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
-const Admin = sequelize.define('admin', {
+const AdminModel = sequelize.define('admin', {
     admin_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -20,4 +20,4 @@ const Admin = sequelize.define('admin', {
     timestamps: true,
 });
 
-export default Admin;
+export default AdminModel;

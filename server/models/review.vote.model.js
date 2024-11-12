@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
-import User from "./user.model.js";
+import UserModel from "./user.model.js";
 import Review from "./review.model.js";
 
-const Vote = sequelize.define('vote', {
+const ReviewVoteModel = sequelize.define('review.vote', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -14,7 +14,7 @@ const Vote = sequelize.define('vote', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: User,
+            model: UserModel,
             key: 'id',
         },
         onDelete: 'CASCADE',
@@ -36,4 +36,4 @@ const Vote = sequelize.define('vote', {
     }
 })
 
-export default Vote;
+export default ReviewVoteModel;

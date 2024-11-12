@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
-import Product from './product.model.js';
+import ProductModel from './product.model.js';
 
-const ProductImage = sequelize.define('product.image', {
+const ProductImageModel = sequelize.define('product.image', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -13,7 +13,7 @@ const ProductImage = sequelize.define('product.image', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Product, // referensi ke tabel Product
+            model: ProductModel, // referensi ke tabel Product
             key: 'id',
         },
         onDelete: 'CASCADE', // opsi agar data dihapus jika produk dihapus
@@ -30,4 +30,4 @@ const ProductImage = sequelize.define('product.image', {
     timestamps: true,
 });
 
-export default ProductImage;
+export default ProductImageModel;

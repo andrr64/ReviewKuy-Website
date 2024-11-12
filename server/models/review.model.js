@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
-import User from "./user.model.js";
+import UserModel from "./user.model.js";
 import Product from "./product.model.js";
 
-const Review = sequelize.define('review', {
+const ReviewModel = sequelize.define('review', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -14,7 +14,7 @@ const Review = sequelize.define('review', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: User,
+            model: UserModel,
             key: 'id',
         },
         onDelete: 'CASCADE',
@@ -57,4 +57,4 @@ const Review = sequelize.define('review', {
     timestamps: true,
 });
 
-export default Review;
+export default ReviewModel;

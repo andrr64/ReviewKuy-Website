@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
-const User = sequelize.define('user', {
+const UserModel = sequelize.define('user', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -29,4 +29,4 @@ const User = sequelize.define('user', {
     timestamps: true,
 });
 
-export default User;
+export default UserModel;

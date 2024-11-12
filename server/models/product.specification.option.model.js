@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
-const ProductSpecificationOption = sequelize.define('product.specification.option', {
+const ProductSpecificationOptionModel = sequelize.define('product.specification.option', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -17,4 +17,4 @@ const ProductSpecificationOption = sequelize.define('product.specification.optio
     timestamps: false, // Karena ini hanya daftar tetap, kita bisa mematikan timestamps jika tidak diperlukan.
 });
 
-export default ProductSpecificationOption;
+export default ProductSpecificationOptionModel;

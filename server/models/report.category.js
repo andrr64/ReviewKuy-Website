@@ -1,7 +1,6 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../db.js';
+import sequelize from "../db.js";
 
-const Category = sequelize.define('category', {
+const ReportCategoryModel = sequelize.define('report.category', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -12,8 +11,6 @@ const Category = sequelize.define('category', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-}, {
-    timestamps: true,
 });
 
-export default Category;
+export default ReportCategoryModel;

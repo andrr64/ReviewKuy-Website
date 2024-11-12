@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 import Product from './product.model.js';
-import ProductSpecificationOption from './product.specification.option.model.js';
+import ProductSpecificationOptionModel from './product.specification.option.model.js';
 
-const ProductSpecification = sequelize.define('product.specification', {
+const ProductSpecificationModel = sequelize.define('product.specification', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -23,7 +23,7 @@ const ProductSpecification = sequelize.define('product.specification', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: ProductSpecificationOption,
+            model: ProductSpecificationOptionModel,
             key: 'id',
         },
         onDelete: 'CASCADE',
@@ -41,4 +41,4 @@ const ProductSpecification = sequelize.define('product.specification', {
 });
 
 
-export default ProductSpecification;
+export default ProductSpecificationModel;
