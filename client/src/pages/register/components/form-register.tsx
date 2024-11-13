@@ -29,7 +29,7 @@ export default function FormRegister({ loginCallback }: FormRegisterProps) {
     const onSubmit = async (data: FieldValues) => {
         // Hapus field confirmPassword dari data
         delete data.confirmPassword;
-        showAlertByResponseCode(await UserAPI.createUser(data));
+        showAlertByResponseCode((await UserAPI.createUser(data)).status);
     };
 
     const togglePasswordVisibility = () => {

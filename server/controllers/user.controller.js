@@ -201,14 +201,11 @@ export const loginUser = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        return serverSuccess(res, 'Login successful', {
-            user: {
-                name: user.name,
-                email: user.email,
-                avatar: user.avatar
-            }
+        return res.status(200).send({
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar
         });
-
     } catch (error) {
         console.error('Error during login:', error);
         return serverError(res, 'Something went wrong, please try again later.');

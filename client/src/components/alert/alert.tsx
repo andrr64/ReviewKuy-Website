@@ -39,9 +39,9 @@ export const showAlertByResponseCode = (responseCode: number) => {
             break;
         case 404:
             Swal.fire({
-                icon: 'warning',
+                icon: 'error',
                 title: 'Tidak Ditemukan!',
-                text: 'Sumber daya yang dicari tidak ada.',
+                text: 'Data tidak ditemukan',
             });
             break;
         case 500:

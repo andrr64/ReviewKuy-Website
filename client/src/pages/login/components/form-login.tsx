@@ -3,6 +3,10 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
+import UserAPI from '../../../api/user';
+import { showAlertByResponseCode } from '../../../components/alert/alert';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../state/user/userState';
 interface FormLoginProps {
     regCallback: () => void;
 }
@@ -11,11 +15,16 @@ export default function FormLogin({ regCallback }: FormLoginProps) {
     const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
     useEffect(() => setTitle('Login'), []);
+    const dispatch = useDispatch(); // Inisialisasi useDispatch
 
     // React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = (data: FieldValues) => {
-        console.log(data);
+    const onSubmit = async (data: FieldValues) => {
+        const response = await UserAPI.login(data);
+        if (response.status === 200) {
+            dispatch(login(response.data)); // Pastikan login dipanggil dengan dispatch
+        } 
+        showAlertByResponseCode(response.status);
     };
 
     // Function untuk toggle password visibility
