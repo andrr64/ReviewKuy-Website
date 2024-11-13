@@ -4,6 +4,7 @@ import { ProductModel } from "../../model/product";
 import ProductCard from "../../components/card/ProductCard";
 import { ImSad } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
+import { FaXRay } from "react-icons/fa";
 
 interface RenderProductsProps {
   products: ProductModel[];
@@ -14,10 +15,7 @@ const RenderProducts: React.FC<RenderProductsProps> = ({ products, onDelete }) =
   const navigate = useNavigate();
   if (products.length === 0) {
     return (
-      <div className="space-y-2 flex text-base flex-col my-10 justify-center items-center">
-        <ImSad className="text-6xl" />
-        <h1 className="text-xl">Empty :(</h1>
-      </div>
+      <p>Tidak ada data produk yang ditemukan.</p>
     );
   }
 

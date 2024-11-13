@@ -24,4 +24,15 @@ export class ProductAPI {
             throw new Error('Failed to delete product');
         }
     }
+
+    static async searchProduct(productName: string) {
+        try {
+            const response = await axios.post('/api/product/search', {name: productName});
+            return response.data.map((val: any) => {
+                return new ProductModel(val);
+            });
+        } catch (error) {
+            throw new Error('something wrong');
+        }
+    }
 }

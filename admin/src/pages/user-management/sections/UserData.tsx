@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import { UserAPI } from '../../../api/user';
 import { UserModel } from '../../../model/user';
 import MemberTotalCard from '../../../components/card/MemberCard';
+import { showFailed } from '../../../util/alert';
 
 function UserData() {
     const [search, setSearch] = useState<string>('');
@@ -32,7 +33,7 @@ function UserData() {
         try {
             setTotaluser((await UserAPI.getTotalUser()));
         } catch (error) {
-            setTotaluser('Something Wrong');
+            showFailed('Gagal', 'Token tidak valid! silahkan login kembali');
         }
     }
 
@@ -48,21 +49,17 @@ function UserData() {
             </div>
             <SearchBar onSearch={handleSearch} placeholder='Cari Pengguna...' />
 
-            {search.length !== 0 && (
+            {searchResult.length !== 0 && (
                 <div className='flex items-center gap-2'>
                     <p>Hasil Pencarian <b>{`${search}`}</b> {`(${searchResult.length} hasil)`}</p>
                     <Button color='danger' variant='filled' onClick={handleClearSearch}>Clear</Button>
                 </div>
             )}
 
-            <div>
-                <h2 className='text-1xl font-semibold'>Anggota Baru (Hari Ini)</h2>
-            </div>
-
             {searchResult.length !== 0 && (
                 <div className='flex'>
                     {searchResult.map((val) => (
-                        <ProfileCard name={val.name} avatar={'https://cdn-icons-png.flaticon.com/512/9203/9203764.png'} email={val.email} />
+                        <ProfileCard name={val.name} avatar={val.avatar} email={val.email} />
                     ))}
                 </div>
             )}

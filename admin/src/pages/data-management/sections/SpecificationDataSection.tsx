@@ -119,7 +119,7 @@ function SpecificationDataSection() {
             {specOptData ? (
                 <ul className="space-y-4">
                     {specOptData.length === 0 ? (
-                        <p>No specification options found.</p>
+                        <p>Tidak ada data opsi spesifikasi yang ditemukan.</p>
                     ) : (
                         specOptData.map((specOpt) => (
                             <li key={specOpt.id} className="flex justify-between items-center px-6 py-3 border border-gray-300 rounded-lg transition duration-200">

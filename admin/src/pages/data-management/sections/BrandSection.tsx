@@ -1,4 +1,3 @@
-import { ImSad } from "react-icons/im";
 import BrandCard from "../../../components/card/BrandCard";
 import { Brand } from "../../../model/brand"
 import { useEffect, useState } from "react";
@@ -10,18 +9,18 @@ import { BrandAPI } from "../../../api/brand";
 
 function BrandSection() {
     const [brands, setBrands] = useState<Brand[]>([]);
+    const [search, setSearch] = useState('');
     const [searchResult, setSearchResult] = useState<Brand[]>([]);
     const navigate = useNavigate();
 
-    const handleDeleteBrand = async (brand_id: number, setBrands: React.Dispatch<React.SetStateAction<Brand[]>>) => {
+    const handleDeleteBrand = async (brand_id: number) => {
         try {
             const confirm = await showPrompt('Hapus', 'Anda yakin? data tidak bisa dikembalikan.');
             if (confirm) {
                 const response: any = await BrandAPI.deleteBrand(brand_id);
                 if (response.status === 200) {
                     await showSuccess('Success', 'Data berhasil dihapus');
-                    // Menghapus brand dari state
-                    setBrands(prevBrands => prevBrands.filter(brand => brand.id !== brand_id));
+                    fetchBrand();
                 }
             }
         } catch (error: any) {
@@ -29,10 +28,10 @@ function BrandSection() {
         }
     };
     const handleSearch = async (query: string) => {
+        setSearch(query);
         const response = await BrandAPI.searchBrand(query);
-        console.log(response);
+        setSearchResult(response);
     }
-
     const fetchBrand = async () => {
         try {
             const brandData = await BrandAPI.getBrands();
@@ -44,14 +43,14 @@ function BrandSection() {
     useEffect(() => {
         fetchBrand();
     }, []);
-
+    const handleClearSearch = () => {
+        setSearch('');
+        setSearchResult([]);
+    }
     const renderBrands = (brands: Brand[]) => {
         if (brands.length === 0) {
             return (
-                <div className="space-y-2 flex text-base flex-col my-10 justify-center items-center">
-                    <ImSad className="text-6xl" />
-                    <h1 className="text-xl">Empty :(</h1>
-                </div>
+                <p>Tidak ada data merek yang ditemukan.</p>
             );
         }
 
@@ -65,7 +64,7 @@ function BrandSection() {
                             navigate(`edit-brand/${brand.id}`)
                         }}
                         onDelete={(id) => {
-                            handleDeleteBrand(id, setBrands);
+                            handleDeleteBrand(id);
                         }}
                     />
                 ))}
@@ -77,10 +76,17 @@ function BrandSection() {
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Merek</h2>
             <SearchBar onSearch={handleSearch} />
             <Button type="primary" onClick={() => navigate('add-brand')}>Tambah Merek</Button>
-            {/* Menggunakan fungsi renderBrands */}
-            {renderBrands(brands)}
+            {(searchResult.length !== 0  || search.length !== 0)  && (
+                <>
+                    <div className='flex items-center gap-2'>
+                        <p>Hasil pencarian <b>{`${search}`}</b> {`(${searchResult.length} hasil)`}</p>
+                        <Button color='danger' variant='filled' onClick={handleClearSearch}>Clear</Button>
+                    </div>
+                    {renderBrands(searchResult)}
+                </>
+            )}
+            {((searchResult.length === 0) && (search.length === 0)) && (renderBrands(brands))}
         </div>
-
     )
 }
 

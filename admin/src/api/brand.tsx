@@ -48,7 +48,7 @@ export class BrandAPI {
 
     // Menghapus brand berdasarkan ID
     static async deleteBrand(brandId: number): Promise<void> {
-        await axios.delete(`/api/admin/feature/brand/delete/${brandId}`);
+        return await axios.delete(`/api/admin/feature/brand/delete/${brandId}`);
     }
 
     // Menambahkan brand baru

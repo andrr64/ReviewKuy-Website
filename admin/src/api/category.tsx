@@ -26,12 +26,12 @@ export class CategoryAPI {
     }
 
     // Memperbarui kategori berdasarkan ID
-    static async updateCategory(categoryId: number, categoryData: Partial<Category>): Promise<Category> {
+    static async updateCategory(categoryData: Partial<Category>): Promise<Category> {
         try {
-            const response = await axios.put(`/api/admin/feature/category/update/${categoryId}`, categoryData);
+            const response = await axios.put(`/api/admin/feature/category/update/${categoryData.id}`, categoryData);
             return new Category(response.data);
         } catch (error) {
-            console.error(`Failed to update category with ID ${categoryId}:`, error);
+            console.error(`Failed to update category with ID ${categoryData.id}:`, error);
             throw new Error('Failed to update category');
         }
     }
@@ -48,6 +48,19 @@ export class CategoryAPI {
         } catch (error) {
             console.error(`Failed to delete category with ID ${categoryId}:`, error);
             throw new Error('Failed to delete category');
+        }
+    }
+
+    static async addCategory(categoryName: string): Promise<Category> {
+        try {
+            const response = await axios.post('/api/admin/feature/category/create', {name: categoryName});
+            if (response.status === 201){
+                return new Category(response.data);
+            } else {
+                throw new Error('Someting wrong');
+            }
+        } catch (error) {
+            throw new Error('Failed to create category');
         }
     }
 }
