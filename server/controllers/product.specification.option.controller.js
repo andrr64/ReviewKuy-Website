@@ -17,7 +17,7 @@ export const getSpecOptionsData = async (req, res) => {
         return serverError(res, error.message);
     }
 };
-
+    
 // Fungsi untuk menambahkan ProductSpecificationOption baru
 export const createSpecOption = async (req, res) => {
     const { name } = req.body;

@@ -15,7 +15,7 @@ export const createCategory = async (req, res) => {
         }
 
         const newCategory = await Category.create({ name });
-        return serverCreated(res, "Category created successfully", newCategory);
+        return res.status(201).json(newCategory);
     } catch (error) {
         return serverError(res, "Failed to create category");
     }
