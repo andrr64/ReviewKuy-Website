@@ -4,7 +4,8 @@ import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa6';
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
-import { API_CreateUser } from '../../../api/user';
+import UserAPI from '../../../api/user';
+import { showAlertByResponseCode } from '../../../components/alert/alert';
 
 interface FormRegisterProps {
     loginCallback: () => void;
@@ -28,14 +29,8 @@ export default function FormRegister({ loginCallback }: FormRegisterProps) {
     const onSubmit = async (data: FieldValues) => {
         // Hapus field confirmPassword dari data
         delete data.confirmPassword;
-        try {
-            const response = await API_CreateUser(data);
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-        }
+        showAlertByResponseCode(await UserAPI.createUser(data));
     };
-    
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
