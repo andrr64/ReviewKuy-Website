@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
-import UserModel from "./user.model.js";
+import User from "./user.model.js";
 import Review from "./review.model.js";
 
 const ReviewVoteModel = sequelize.define('review.vote', {
@@ -14,7 +14,7 @@ const ReviewVoteModel = sequelize.define('review.vote', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: UserModel,
+            model: User,
             key: 'id',
         },
         onDelete: 'CASCADE',

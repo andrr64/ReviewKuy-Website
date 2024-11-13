@@ -1,3 +1,4 @@
+import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
 
 const ReportCategoryModel = sequelize.define('report.category', {
