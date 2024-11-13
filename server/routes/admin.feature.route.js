@@ -1,11 +1,10 @@
 import express from 'express';
 import { createBrand, deleteBrandById, updateBrand } from '../controllers/brand.controller.js';
-import { createCategory, deleteCategory, getCategory, updateCategory } from '../controllers/category.controller.js';
+import { createCategory, deleteCategory, updateCategory } from '../controllers/category.controller.js';
 import { createAdmin, updateAdmin } from '../controllers/admin.controller.js';
 import { createProduct, deleteProduct, updateProduct } from '../controllers/product.controller.js';
 import { createSpecOption, deleteSpecOption, updateSpecOption } from '../controllers/product.specification.option.controller.js';
 import { getUserByName, getUserTotal } from '../controllers/user.controller.js';
-import { createReportCategory, deleteReportCategory, getReportCategory, updateReportCategory } from '../controllers/report.category.controller.js';
 
 const router = express.Router();
 
@@ -26,11 +25,6 @@ router.delete('/product/delete/:id', deleteProduct);
 
 router.post('/user/search', getUserByName);
 router.get('/user/total', getUserTotal);
-
-router.post('/report/category', createReportCategory);
-router.get('/report/category', getReportCategory);
-router.put('/report/category/:id', updateReportCategory);
-router.delete('/report/category/:id', deleteReportCategory);
 
 router.post('/product/specification/option/create', createSpecOption);
 router.post('/product/specification/option/update', updateSpecOption);
