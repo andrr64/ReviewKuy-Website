@@ -8,6 +8,9 @@ import { RootState } from "../state/store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { showPrompt, showSuccess } from "../util/alert/show_alert";
 import { logout } from "../state/user/userState";
+import { CategoryModel } from "../model/category.model";
+import { CategoryAPI } from "../api/category.api";
+import { showAlertByResponseCode } from "../util/alert/alert";
 
 function Navbar() {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -18,6 +21,17 @@ function Navbar() {
     const categoryDropdownRef = useRef<HTMLLIElement | null>(null); // Ref untuk dropdown kategori
     const navigate = useNavigate();
     const location = useLocation();
+    const [categories, setCategories] = useState<CategoryModel[]>([]);
+
+    const fetchCategories = async () => {
+        const response = await CategoryAPI.getCategories();
+        if (response.status !== 200) {
+            setCategories([]);
+            showAlertByResponseCode(response.status);
+        } else {
+            setCategories(response.data.map((val: any) => new CategoryModel(val)));
+        }
+    }
 
     const handleLoginClick = () => setModalOpen(true);
     const handleRegClick = () => setRegModalOpen(true);
@@ -56,7 +70,7 @@ function Navbar() {
                 setCategoryDropdownOpen(false);
             }
         };
-
+        fetchCategories();
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -96,18 +110,16 @@ function Navbar() {
                             {isCategoryDropdownOpen && (
                                 <div className="absolute top-full left-0 mt-2 bg-white text-black rounded-lg shadow-lg w-40 z-50">
                                     <ul className="p-2">
-                                        <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
-                                            setCategoryDropdownOpen(false);
-                                            navigate('/kategori/smartphone');
-                                        }}>
-                                            Smartphone
-                                        </li>
-                                        <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
-                                            setCategoryDropdownOpen(false);
-                                            navigate('/kategori/laptop');
-                                        }}>
-                                            Laptop
-                                        </li>
+                                        {categories.length !== 0 && (
+                                            categories.map((val) => {
+                                                return <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
+                                                    setCategoryDropdownOpen(false);
+                                                    navigate(`/kategori/${val.id}`)
+                                                }}>
+                                                    {val.name}
+                                                </li>
+                                            })
+                                        )}
                                     </ul>
                                 </div>
                             )}
