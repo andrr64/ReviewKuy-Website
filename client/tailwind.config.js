@@ -8,6 +8,7 @@ export default {
     extend: {
       textColor: {
         'primary': '#291F39',
+        'dark-purple': '#291F39',
       },
       backgroundImage: {
         'banner-login': "url(src/assets/background-image/banner-login.jpg)"
