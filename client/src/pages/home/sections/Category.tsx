@@ -1,6 +1,6 @@
-import CategoryCard from "./components/CategoryCard"
-import LaptopPng from './components/laptop.png';
-import SpPng from './components/smarpthone.png';
+import CategoryCard from "../components/CategoryCard"
+import LaptopPng from '../components/laptop.png';
+import SpPng from '../components/smarpthone.png';
 
 
 ///TODO: implementasi getData 

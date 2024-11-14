@@ -1,5 +1,5 @@
 import { FaSearch } from 'react-icons/fa';
-import phone_illustration from './assets/phone-illustration.png';
+import phone_illustration from '../assets/phone-illustration.png';
 
 function Jumbotron() {
   return (

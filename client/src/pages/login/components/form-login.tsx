@@ -4,14 +4,15 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
 import UserAPI from '../../../api/user';
-import { showAlertByResponseCode } from '../../../components/alert/alert';
+import { showAlertByResponseCode } from '../../../util/alert/alert';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../state/user/userState';
 interface FormLoginProps {
+    closeCallback: () => void;
     regCallback: () => void;
 }
 
-export default function FormLogin({ regCallback }: FormLoginProps) {
+export default function FormLogin({closeCallback, regCallback }: FormLoginProps) {
     const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
     useEffect(() => setTitle('Login'), []);
@@ -23,6 +24,7 @@ export default function FormLogin({ regCallback }: FormLoginProps) {
         const response = await UserAPI.login(data);
         if (response.status === 200) {
             dispatch(login(response.data)); // Pastikan login dipanggil dengan dispatch
+            closeCallback();
         } 
         showAlertByResponseCode(response.status);
     };

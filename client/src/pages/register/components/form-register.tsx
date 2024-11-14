@@ -5,7 +5,7 @@ import { FaEyeSlash } from 'react-icons/fa6';
 import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
 import UserAPI from '../../../api/user';
-import { showAlertByResponseCode } from '../../../components/alert/alert';
+import { showAlertByResponseCode } from '../../../util/alert/alert';
 
 interface FormRegisterProps {
     loginCallback: () => void;

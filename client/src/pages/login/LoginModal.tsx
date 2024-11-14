@@ -5,10 +5,11 @@ import { IoCloseSharp } from "react-icons/io5";
 
 interface LoginPageProps {
   callback: () => void;
+  closeCallback: () => void;
   regCallback: () => void
 }
 
-const LoginModal: React.FC<LoginPageProps> = ({ callback, regCallback }) => {
+const LoginModal: React.FC<LoginPageProps> = ({closeCallback, callback, regCallback }) => {
   return (
     <div className="bg-dark-purple shadow-lg p-5 laptop:p-10 w-full max-w-xl rounded-2xl desktop:w-1/3">
       <div className='w-full flex justify-end'>
@@ -20,7 +21,7 @@ const LoginModal: React.FC<LoginPageProps> = ({ callback, regCallback }) => {
         </button>
       </div>
       <LogoSection />
-      <FormLogin regCallback={regCallback} />
+      <FormLogin closeCallback={closeCallback} regCallback={regCallback} />
     </div>
   );
 

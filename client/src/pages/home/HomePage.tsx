@@ -1,7 +1,7 @@
-import About from "./About";
-import Brand from "./Brand";
-import Category from "./Category";
-import Jumbotron from "./Jumbotron";
+import About from "./sections/About";
+import Brand from "./sections/Brand";
+import Category from "./sections/Category";
+import Jumbotron from "./sections/Jumbotron";
 
 export default function Home() {
   return (

@@ -1,9 +1,9 @@
-import { RK_FullLogo } from "../../assets/import";
-import MemberCard from "./components/MemberCard";
+import { RK_FullLogo } from "../../../assets/import";
+import MemberCard from "../components/MemberCard";
 
 function About() {
   return (
-    <section id="brand" className="bg-white flex flex-col hv-center border-2 w-full py-10 px-20">
+    <section id="about" className="bg-white flex flex-col hv-center border-2 w-full py-10 px-20">
       <h1 className="text-2xl font-bold text-primary mb-10">Tentang Kami</h1>
       <div className="flex">
         <img className="mr-20" src={RK_FullLogo} alt="" />

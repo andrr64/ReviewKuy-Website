@@ -1,9 +1,8 @@
-import BrandCard from "./components/BrandCard"
-import SamsungLogo from "./components/samsung.png";
-import InfinixLogo from "./components/infinix.png";
-import PocoLogo from "./components/poco.png";
-
-import LenovoLogo from "./components/lenovo.png";
+import BrandCard from "../components/BrandCard"
+import SamsungLogo from "../components/samsung.png";
+import InfinixLogo from "../components/infinix.png";
+import PocoLogo from "../components/poco.png";
+import LenovoLogo from "../components/lenovo.png";
 
 import { SlScreenSmartphone } from "react-icons/sl";
 import { CiLaptop } from "react-icons/ci";
