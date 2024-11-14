@@ -1,15 +1,16 @@
-interface CategoryCardData {
-  imgUrl: string;
-  title: string;
+import { CategoryModel } from "../../../model/category.model";
+
+interface CategoryCardProps {
+  data: CategoryModel;
 }
 
-function CategoryCard(categoryCardData: CategoryCardData) {
+const CategoryCard: React.FC<CategoryCardProps> = ({data}) => {
   return (
-    <a href="">
+    <a href={`/kategory/${data.id}`}>
       <div className="bg-light-purple transition-300 hover:-translate-y-5">
-        <img src={categoryCardData.imgUrl} alt={categoryCardData.title} className='h-80 p-5' />
+        <img src={data.image_url} alt={data.name} className='h-80 w-80 p-5' />
         <div className='bg-dark-purple text-center p-2 text-white'>
-          <p>{categoryCardData.title}</p>
+          <p>{data.name}</p>
         </div>
       </div>
     </a>

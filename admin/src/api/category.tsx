@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Category } from '../model/category';
+import { toBase64 } from '../util/fileConverter';
 
 
 export class CategoryAPI {
@@ -51,9 +52,10 @@ export class CategoryAPI {
         }
     }
 
-    static async addCategory(categoryName: string): Promise<Category> {
+    static async addCategory(name: string, image_file: File): Promise<Category> {
         try {
-            const response = await axios.post('/api/admin/feature/category/create', {name: categoryName});
+            const image_base64 = await toBase64(image_file);
+            const response = await axios.post('/api/admin/feature/category/create', {name, image_base64});
             if (response.status === 201){
                 return new Category(response.data);
             } else {
