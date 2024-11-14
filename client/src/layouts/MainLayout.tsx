@@ -1,13 +1,13 @@
-import { Outlet } from "react-router-dom"; // Impor Outlet
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { Outlet } from "react-router-dom"; // Ini adalah tempat dimana komponen halaman lain akan dimuat
 
-export default function MainLayout() {
+const MainLayout = () => {
   return (
-    <div>
-      <Navbar />
-      <Outlet /> {/* Tempat untuk merender rute anak */}
-      <Footer />
-    </div>
+    <>
+      <main>
+        <Outlet /> {/* Konten halaman spesifik akan muncul di sini */}
+      </main>
+    </>
   );
-}
+};
+
+export default MainLayout;

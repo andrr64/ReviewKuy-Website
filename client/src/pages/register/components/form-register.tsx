@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa6';
-import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
-import UserAPI from '../../../api/user';
+import UserAPI from '../../../api/user.api';
 import { showAlertByResponseCode } from '../../../util/alert/alert';
 
 interface FormRegisterProps {
@@ -23,7 +22,6 @@ export default function FormRegister({ loginCallback }: FormRegisterProps) {
     const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
     const minNameLength = 3;
-    useEffect(() => setTitle('Register'), []);
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async (data: FieldValues) => {

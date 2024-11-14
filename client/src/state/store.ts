@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loadingSlice from './loading/loadingState';
 import userSlice from './user/userState';
-import storage from "redux-persist/lib/storage"; // Pilih penyimpanan yang akan digunakan, misalnya localStorage
+import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
+import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 // Konfigurasi persist
 const persistConfig = {
-    key: "root", // Kunci utama untuk penyimpanan
-    storage, // Menggunakan localStorage
+    key: "root",
+    storage,
 };
 
 // Gabungkan reducers
@@ -20,12 +21,18 @@ const rootReducer = combineReducers({
 // Reducer persisten
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Buat store dengan reducer yang sudah dipersist
+// Buat store dengan middleware yang disesuaikan untuk redux-persist
 export const store = configureStore({
     reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
 });
 
-export const persistor = persistStore(store); // Persistor untuk mengontrol penyimpanan
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

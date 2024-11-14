@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { setTitle } from '../../utility';
 import { GoogleLogo } from '../../../assets/import';
-import UserAPI from '../../../api/user';
+import UserAPI from '../../../api/user.api';
 import { showAlertByResponseCode } from '../../../util/alert/alert';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../state/user/userState';
@@ -15,7 +14,6 @@ interface FormLoginProps {
 export default function FormLogin({closeCallback, regCallback }: FormLoginProps) {
     const [showPassword, setShowPassword] = useState(false);
     const minPasswordLength = 10;
-    useEffect(() => setTitle('Login'), []);
     const dispatch = useDispatch(); // Inisialisasi useDispatch
 
     // React Hook Form

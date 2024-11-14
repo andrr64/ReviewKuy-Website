@@ -13,7 +13,9 @@ function Navbar() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [isRegModalOpen, setRegModalOpen] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null); // Referensi untuk dropdown menu
+    const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false); // State untuk dropdown kategori
+    const dropdownRef = useRef<HTMLLIElement | null>(null);
+    const categoryDropdownRef = useRef<HTMLLIElement | null>(null); // Ref untuk dropdown kategori
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,7 +27,6 @@ function Navbar() {
     const userData = useSelector((state: RootState) => state.user.data);
     const dispatch = useDispatch();
 
-    // Fungsi untuk menangani klik Beranda
     const handleHomeClick = () => {
         if (location.pathname === '/') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -33,30 +34,30 @@ function Navbar() {
             navigate('/');
         }
     };
-    const handleLogout = async() => {
-        if (userData !== null){
-            if (await showPrompt('Logout', 'Anda yakin ingin keluar?')){
+
+    const handleLogout = async () => {
+        if (userData !== null) {
+            if (await showPrompt('Logout', 'Anda yakin ingin keluar?')) {
                 dispatch(logout());
                 showSuccess('Berhasil', 'Logout berhasil!');
             }
         }
     }
-    
-    // Fungsi untuk toggle dropdown menu
-    const toggleDropdown = () => setDropdownOpen(prev => !prev);
 
-    // Menutup dropdown jika klik di luar dropdown
+    const toggleDropdown = () => setDropdownOpen(prev => !prev);
+    const toggleCategoryDropdown = () => setCategoryDropdownOpen(prev => !prev); // Fungsi untuk toggle dropdown kategori
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setDropdownOpen(false);
+            }
+            if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+                setCategoryDropdownOpen(false);
             }
         };
 
-        // Menambahkan event listener untuk klik luar
         document.addEventListener('mousedown', handleClickOutside);
-
-        // Menghapus event listener saat komponen unmount
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -68,7 +69,7 @@ function Navbar() {
                 <div className="container mx-auto flex items-center justify-between w-4/5 gap-5">
 
                     <a href="#" onClick={handleHomeClick}>
-                        <img src={RK_WhiteLogo} alt="Logo RK" className="h-10" />
+                        <img src={RK_WhiteLogo} alt="Logo RK" className="h-16 w-16" />
                     </a>
 
                     <div className="relative w-full max-w-3xl ml-4">
@@ -84,14 +85,32 @@ function Navbar() {
 
                     <ul className="flex text-sm font-medium items-center gap-4">
                         <li>
-                            <button onClick={handleHomeClick} className="font-bold hover:underline">
+                            <button onClick={handleHomeClick} className="font-bold">
                                 Beranda
                             </button>
                         </li>
-                        <li>
-                            <a href="/kategori" className="font-bold hover:underline">
+                        <li className="relative" ref={categoryDropdownRef}>
+                            <button onClick={toggleCategoryDropdown} className="font-bold">
                                 Kategori
-                            </a>
+                            </button>
+                            {isCategoryDropdownOpen && (
+                                <div className="absolute top-full left-0 mt-2 bg-white text-black rounded-lg shadow-lg w-40 z-50">
+                                    <ul className="p-2">
+                                        <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
+                                            setCategoryDropdownOpen(false);
+                                            navigate('/kategori/smartphone');
+                                        }}>
+                                            Smartphone
+                                        </li>
+                                        <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer" onClick={() => {
+                                            setCategoryDropdownOpen(false);
+                                            navigate('/kategori/laptop');
+                                        }}>
+                                            Laptop
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
                         </li>
                         {userData === null ? (
                             <>
@@ -115,9 +134,8 @@ function Navbar() {
                                         <p className="font-semibold">{userData.name}</p>
                                     </div>
 
-                                    {/* Dropdown menu */}
                                     {isDropdownOpen && (
-                                        <div className="absolute top-full right-0 mt-2 bg-white text-black rounded-lg shadow-lg w-40">
+                                        <div className="absolute top-full right-0 mt-2 bg-white text-black rounded-lg shadow-lg w-40 z-50">
                                             <ul className="p-2">
                                                 <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                                 <li className="py-1 px-2 hover:bg-gray-100 cursor-pointer">Settings</li>
@@ -132,9 +150,8 @@ function Navbar() {
                 </div>
             </nav>
 
-            {/* Modal untuk Login */}
             {isModalOpen && (
-                <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <LoginModal closeCallback={closeLoginModal} callback={closeLoginModal} regCallback={() => {
                         closeLoginModal();
                         handleRegClick();
@@ -142,7 +159,7 @@ function Navbar() {
                 </div>
             )}
             {isRegModalOpen && (
-                <div className={`fixed inset-0 flex items-center mt-10 justify-center bg-black bg-opacity-50 z-50`}>
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <RegisterModal callback={closeRegModal} loginCallback={() => {
                         closeRegModal();
                         handleLoginClick();
