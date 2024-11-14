@@ -5,7 +5,7 @@ import { serverBadRequest, serverError, serverCreated, serverNotFound, serverUna
 // Fungsi untuk membuat ulasan baru
 export const createReview = async (req, res) => {
     try {
-        const { productId, title, rating, review } = req.body;
+        const {productId, title, rating, review } = req.body;
         const decodedUserId = req.user.id; // Mengambil userId dari token yang sudah diverifikasi
 
         // Validasi input
@@ -52,7 +52,10 @@ export const createReview = async (req, res) => {
 
 export const updateReview = async (req, res) => {
     try {
-        const { productId, title, rating, review } = req.body;
+        const {id} = req.params;
+        const {title, rating, review } = req.body;
+
+        const productId = id;
         const decodedUserId = req.user.id;
 
         // Validasi input

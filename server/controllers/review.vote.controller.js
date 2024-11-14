@@ -11,16 +11,16 @@ import {
 // Fungsi untuk membuat vote baru
 export const createVote = async (req, res) => {
     try {
-        const { reviewId, value } = req.body; // Ambil reviewId dan value dari request body
-        const userId = req.user.id; // Mengambil userId dari token yang sudah diverifikasi
+        const {review_id, value } = req.body; // Ambil reviewId dan value dari request body
+        const user_id = req.user.id; // Mengambil userId dari token yang sudah diverifikasi
 
         // Validasi input
-        if (!reviewId || value === undefined) {
+        if (!review_id || value === undefined) {
             return serverBadRequest(res, "Review ID and value are required");
         }
 
         // Cek review produk ada
-        const review = await Review.findByPk(reviewId);
+        const review = await Review.findByPk(review_id);
         if (!review) {
             return serverNotFound(res, "Review not found");
         }
@@ -28,8 +28,8 @@ export const createVote = async (req, res) => {
         // Cek apakah user sudah memberikan vote untuk review ini
         const existingVote = await ReviewVoteModel.findOne({
             where: {
-                review_id: reviewId,
-                user_id: userId,
+                review_id: review_id,
+                user_id: user_id,
             },
         });
 
@@ -39,8 +39,8 @@ export const createVote = async (req, res) => {
 
         // Buat vote baru
         const newVote = await ReviewVoteModel.create({
-            user_id: userId,
-            review_id: reviewId,
+            user_id: user_id,
+            review_id: review_id,
             value,
         });
 
@@ -54,18 +54,18 @@ export const createVote = async (req, res) => {
 // Fungsi untuk memperbarui vote yang sudah ada
 export const updateVote = async (req, res) => {
     try {
-        const { reviewId, value } = req.body; // Ambil reviewId dan value dari request body
+        const {review_id, value} = req.body; // Ambil reviewId dan value dari request body
         const userId = req.user.id; // Mengambil userId dari token yang sudah diverifikasi
 
         // Validasi input
-        if (!reviewId || value === undefined) {
+        if (!review_id || value === undefined) {
             return serverBadRequest(res, "Review ID and value are required");
         }
 
         // Cek apakah vote ada
         const vote = await ReviewVoteModel.findOne({
             where: {
-                review_id: reviewId,
+                review_id: review_id,
                 user_id: userId,
             },
         });

@@ -7,11 +7,11 @@ const router =  express.Router();
 
 router.put('/update-account/:id', updateUser);
 
-router.post('/review/post', createReview);
-router.put('/review/update', updateReview);
+router.post('/review', createReview);
+router.put('/review', updateReview);
 
 
-router.post('/vote/post', createVote);
-router.put('/vote/update', updateVote);
+router.post('/vote', createVote);
+router.put('/vote', updateVote);
 
 export default router;
