@@ -79,7 +79,7 @@ function Navbar() {
 
     return (
         <>
-            <nav className="bg-dark-purple text-white py-4">
+            <nav className="bg-dark-purple text-white py-2">
                 <div className="container mx-auto flex items-center justify-between w-4/5 gap-5">
 
                     <a href="#" onClick={handleHomeClick}>
@@ -97,14 +97,14 @@ function Navbar() {
                         </span>
                     </div>
 
-                    <ul className="flex text-sm font-medium items-center gap-4">
+                    <ul className="flex items-center gap-4">
                         <li>
-                            <button onClick={handleHomeClick} className="font-bold">
+                            <button onClick={handleHomeClick}>
                                 Beranda
                             </button>
                         </li>
                         <li className="relative" ref={categoryDropdownRef}>
-                            <button onClick={toggleCategoryDropdown} className="font-bold">
+                            <button onClick={toggleCategoryDropdown}>
                                 Kategori
                             </button>
                             {isCategoryDropdownOpen && (
@@ -163,7 +163,7 @@ function Navbar() {
             </nav>
 
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="fixed inset-0 pt-16 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <LoginModal closeCallback={closeLoginModal} callback={closeLoginModal} regCallback={() => {
                         closeLoginModal();
                         handleRegClick();
@@ -171,7 +171,7 @@ function Navbar() {
                 </div>
             )}
             {isRegModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="fixed inset-0 pt-16 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <RegisterModal callback={closeRegModal} loginCallback={() => {
                         closeRegModal();
                         handleLoginClick();
