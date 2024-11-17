@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from "axios";
+import { apiContainer } from "./util";
 
 export class BrandAPI {
-    static async getAllBrands(): Promise<AxiosResponse<any>>{
-        try {
-            const response = await axios.get('/api/brand');
-            return response;
-        } catch (error: any) {
-            return error; // Mengembalikan status error jika ada, atau 500 jika tidak
-        }
+    static async getAllBrands(): Promise<AxiosResponse<any>> {
+        return apiContainer(() => axios.get('/api/brand')); // Mengirimkan fungsi yang memanggil axios.get
+    }
+
+    static async getBrandById(id: any): Promise<AxiosResponse<any>> {
+        return apiContainer(() => axios.get(`/api/brand/${id}`)); // Mengirimkan fungsi yang memanggil axios.get dengan parameter id
     }
 }
