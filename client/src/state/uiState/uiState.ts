@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface LoadingState {
+interface UIState {
     loading: boolean;
+    upload: boolean;
 }
 
-const initialState: LoadingState = {
+const initialState: UIState = {
     loading: false,
+    upload: false
 };
 
 const loadingSlice = createSlice({
-    name: "loading",
+    name: "uiState",
     initialState,
     reducers: {
         loadingStart: (state) => {

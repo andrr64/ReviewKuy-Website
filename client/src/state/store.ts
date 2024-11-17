@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import loadingSlice from './loading/loadingState';
+import uiStateSlice from './uiState/uiState';
 import userSlice from './user/userState';
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
@@ -14,7 +14,7 @@ const persistConfig = {
 
 // Gabungkan reducers
 const rootReducer = combineReducers({
-    loading: loadingSlice,
+    uiState: uiStateSlice,
     user: userSlice,
 });
 
