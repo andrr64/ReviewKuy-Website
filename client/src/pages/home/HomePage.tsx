@@ -5,11 +5,11 @@ import Jumbotron from "./sections/Jumbotron";
 
 export default function Home() {
   return (
-    <main className="bg-main py-10 space-y-8 px-40">
+    <div className="min-h-screen space-y-8 ">
         <Jumbotron />
         <Category />
         <Brand/>
         <About/>
-    </main>
+    </div>
   )
 }

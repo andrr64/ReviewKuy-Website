@@ -10,11 +10,11 @@ interface RegisterPageProps {
 
 const RegisterModal: React.FC<RegisterPageProps> = ({ callback, loginCallback }) => {
   return (
-    <div className="bg-dark-purple laptop:w-1/3 shadow-lg pb-10 px-10 pt-4 rounded-2xl">
+    <div className="bg-dark-purple max-w-3xl shadow-lg pb-10 px-10 pt-4 rounded-2xl">
       <div className='w-full flex justify-end'>
         <button
           onClick={callback} // Pass the callback correctly without calling it directly
-          className="text-white opacity-90 text-right text-gray-600 mb-4"
+          className="text-white opacity-90 text-right text-gray-600 mb-2"
         >
           <IoCloseSharp className="text-2xl" />
         </button>

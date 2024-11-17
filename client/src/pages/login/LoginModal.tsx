@@ -11,7 +11,7 @@ interface LoginPageProps {
 
 const LoginModal: React.FC<LoginPageProps> = ({closeCallback, callback, regCallback }) => {
   return (
-    <div className="bg-dark-purple shadow-lg p-5 laptop:p-10 w-full max-w-xl rounded-2xl desktop:w-1/3">
+    <div className="bg-dark-purple shadow-lg p-5 laptop:p-10 w-full max-w-lg rounded-2xl">
       <div className='w-full flex justify-end'>
         <button
           onClick={callback} // Pass the callback correctly without calling it directly

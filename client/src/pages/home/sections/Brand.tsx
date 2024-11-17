@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BrandAPI } from "../../../api/brand.api";
 import { BrandModel } from "../../../model/brand.model";
 import LoadingSpinner from "../../../components/spinner/LoadingSpinner";
+import Container from "../../../components/Container";
 
 function Brand() {
     const [brands, setBrands] = useState<BrandModel[] | null>([]);
@@ -14,7 +15,6 @@ function Brand() {
             const response = await BrandAPI.getAllBrands();
             if (response.status === 200) {
                 setBrands(response.data.map((val: any) => new BrandModel(val)));
-                console.log(response.data);
             } else {
                 setBrands(null);
             }
@@ -29,28 +29,30 @@ function Brand() {
     }, [])
 
     return (
-        <section id="brand" className="bg-white flex flex-col hv-center border-2 w-full p-10">
-            <h1 className="text-2xl font-bold text-primary mb-10">Merek</h1>
-            <div className="w-full flex items-center flex-col gap-10">
-                {loading && (
-                    <div className="my-10">
-                        <LoadingSpinner size="20" />
-                    </div>
-                )}
-                {brands !== null && brands.length !== 0 && !loading && (
-                    <div className="hv-center flex gap-3 flex-wrap">
-                        {brands.map((val, index) => (
-                            <BrandCard key={index} brandName={val.name} imgUrl={val.logo_url} />
-                        ))}
-                    </div>
-                )}
-                {brands?.length === 0 && !loading && (
-                    <div className="my-10 text-center ">
-                        <p className="text-xl">Data merek tidak ditemukan.</p>
-                        <button onClick={() => fetchBrand()} className="my-2">Refresh</button>
-                    </div>
-                )}
-            </div>
+        <section id="brand">
+            <Container>
+                <h1 className="text-2xl font-bold text-primary mb-10">Merek</h1>
+                <div className="w-full flex items-center flex-col gap-10">
+                    {loading && (
+                        <div className="my-10">
+                            <LoadingSpinner size="20" />
+                        </div>
+                    )}
+                    {brands !== null && brands.length !== 0 && !loading && (
+                        <div className="hv-center flex gap-3 flex-wrap">
+                            {brands.map((val, index) => (
+                                <BrandCard key={index} brandName={val.name} imgUrl={val.logo_url} id={val.id} />
+                            ))}
+                        </div>
+                    )}
+                    {brands?.length === 0 && !loading && (
+                        <div className="my-10 text-center ">
+                            <p className="text-xl">Data merek tidak ditemukan.</p>
+                            <button onClick={() => fetchBrand()} className="my-2">Refresh</button>
+                        </div>
+                    )}
+                </div>
+            </Container>
         </section>
     );
 }
