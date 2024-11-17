@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { ProductModel } from "../../../model/product"
+import { ProductModel } from "../../../model/product.model"
 import { routes } from "../../../route";
 
 interface HeaderProps {

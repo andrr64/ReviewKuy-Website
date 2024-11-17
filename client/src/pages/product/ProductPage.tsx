@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-import { ProductModel } from "../../model/product";
+import { ProductModel } from "../../model/product.model";
 import { ProductAPI } from "../../api/product.api";
 import { httpGetOk } from "../../api/util";
 import Container from "../../components/Container";

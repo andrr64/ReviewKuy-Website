@@ -4,7 +4,7 @@ import { BrandModel } from "../../model/brand.model";
 import { BrandAPI } from "../../api/brand.api";
 import { showAlertByResponseCode } from "../../util/alert/alert";
 import { ProductAPI } from "../../api/product.api";
-import { ProductModel } from "../../model/product";
+import { ProductModel } from "../../model/product.model";
 import { httpGetOk } from "../../api/util";
 import Container from "../../components/Container";
 import ProductCard from "../../components/cards/ProductCard";

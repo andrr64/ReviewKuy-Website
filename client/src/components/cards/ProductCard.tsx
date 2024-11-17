@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductModel } from '../../model/product';
+import { ProductModel } from '../../model/product.model';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../route';
 interface ProductCardProps {
