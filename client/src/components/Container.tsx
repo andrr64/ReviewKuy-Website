@@ -6,7 +6,7 @@ interface ContainerProps {
 
 function Container({ children }: ContainerProps) {
   return (
-    <div className="bg-white min-h-screen border-2 p-10">
+    <div className="bg-white border-2 p-10">
         {children}
     </div>
   );

@@ -40,6 +40,7 @@ export default function EditProductForm() {
     const [product, setProduct] = useState<ProductModel | null>();
     const [oldThumbnail, setOldThumbnail] = useState<string | null>();
     const [oldGalery, setOldGalery] = useState<string[]>([]);
+    const [price, setPrice] = useState<number>(0);
 
     const handleAddSpecification = () => {
         setSpecifications([...specifications, { spec_opt_id: "", value: "" }]);
@@ -87,6 +88,7 @@ export default function EditProductForm() {
     const fetchProductData = async () => {
         try {
             const product = await ProductAPI.getProductById(id as any);
+            setPrice(product.price);
             setProduct(product);
             setName(product.name);
             setDescription(product.description);
@@ -127,6 +129,7 @@ export default function EditProductForm() {
                 brand_id: selectedBrandId,
                 category_id: selectedCategoryId,
                 specification_data,
+                price,
                 new_thumbnail_base64: newThumbnail !== null ? await toBase64(newThumbnail) : null,
                 new_galery_base64: newImages.length !== 0 ? new_galery_base64 : null,
                 pictures: [oldThumbnail, ...oldGalery]
@@ -156,6 +159,16 @@ export default function EditProductForm() {
                             value={name}
                             id={"name"}
                             onChange={(e) => setName(e.target.value)} />
+                        <div>
+                            <label className="block text-gray-800 font-medium">Harga</label>
+                            <input
+                                type="number"
+                                placeholder="Masukkan harga produk"
+                                value={price}
+                                onChange={(e) => setPrice(Number(e.target.value))} // Konversi string ke number
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none"
+                            />
+                        </div>
                         <RKTextArea
                             label="Deskripsi"
                             id="description" // Tambahkan id untuk textarea

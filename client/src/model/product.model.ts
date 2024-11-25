@@ -11,14 +11,20 @@ export class ProductModel {
     category: CategoryModel;
     specifications: ProductSpecificationModel[];
     pictures: ProductImageModel[];
-    
+    price: number;
+
     constructor(data: any) {
         this.id = data.id;
         this.name = data.name;
+        this.price = data.price;
         this.description = data.description;
         this.brand = new BrandModel(data.brand);
         this.category = new CategoryModel(data.category);
         this.specifications = data.specifications.map((spec: any) => new ProductSpecificationModel(spec));
         this.pictures = data.pictures.map((pic: any) => new ProductImageModel(pic));
+    }
+
+    formattedPrice(): string {
+        return `IDR ${new Intl.NumberFormat('id-ID').format(this.price)}`;
     }
 }

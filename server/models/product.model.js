@@ -36,6 +36,13 @@ const ProductModel = sequelize.define('product', {
         },
         onDelete: 'CASCADE',
     },
+    price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+            min: 0, // Harga minimal 0
+        }
+    }
 }, {
     timestamps: true,
 });

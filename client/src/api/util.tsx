@@ -16,3 +16,11 @@ export const httpGetOk = (res: AxiosResponse) => {
 export const httpCreateOk = (res: AxiosResponse) => {
     return res.status === 201;
 }
+
+export const httpNotFound = (res: AxiosResponse) => {
+    return res.status === 404;
+}
+
+export const httpNotAuthorized = (res: AxiosResponse) => {
+    return res.status === 401;
+}

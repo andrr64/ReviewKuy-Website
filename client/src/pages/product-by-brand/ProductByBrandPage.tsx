@@ -14,6 +14,7 @@ import { loadingEnd, loadingStart } from "../../state/uiState/uiState";
 import LoadingSpinner from "../../components/spinner/LoadingSpinner";
 import BackPageButton from "../../components/button/BackPageButton";
 import MinimalSearchBar from "../../components/search-bar/MinimalSearchBar";
+import { setTitle } from "../utility";
 
 function ProductByBrandPage() {
   const { id } = useParams();
@@ -39,12 +40,12 @@ function ProductByBrandPage() {
         showAlertByResponseCode(response.status);
         return;
       }
-      setBrand(new BrandModel(response.data));
+      const brandData = new BrandModel(response.data);
+      setBrand(brandData);
+      setTitle(brandData.name);
       await fetchProducts();
     } finally {
-      setTimeout(() => {
-        dispatch(loadingEnd());
-      }, 1000);
+      dispatch(loadingEnd());
     }
   };
 
@@ -54,9 +55,9 @@ function ProductByBrandPage() {
 
   const renderBrandInfo = () =>
     brand && (
-      <div className="mb-10 flex gap-6 text-primary">
-        <img src={brand.logo_url} alt={`${brand.name} logo`} />
-        <div className="flex flex-col justify-around">
+      <div className="mb-10 flex gap-6 text-primary items-center">
+        <img className="h-24" src={brand.logo_url} alt={`${brand.name} logo`} />
+        <div className="flex flex-col justify-around gap-2">
           <h1 className="text-4xl font-bold">{brand.name}</h1>
           <p className="text-gray-600">{brand.description}</p>
         </div>
@@ -68,9 +69,8 @@ function ProductByBrandPage() {
     ) : (
       <p className="text-gray-500">No products available for this brand.</p>
     );
-  const handleSearch = async() => {
-    console.log(querySearch);
-    
+  const handleSearch = async () => {
+
   }
   return (
     <Container>
@@ -84,7 +84,7 @@ function ProductByBrandPage() {
           ) : (
             <div className="space-y-8">
               {renderBrandInfo()}
-              <MinimalSearchBar value={querySearch} onChange={(val) => setQuerySearch(val)} onSubmit={(query) => {handleSearch()}}></MinimalSearchBar>
+              <MinimalSearchBar value={querySearch} onChange={(val) => setQuerySearch(val)} onSubmit={(query) => { handleSearch() }}></MinimalSearchBar>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {renderProducts()}
               </div>

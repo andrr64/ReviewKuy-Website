@@ -20,12 +20,12 @@ export const showSuccess = (title: string, text: string) => {
 };
 
 // Fungsi untuk menampilkan pesan warning
-export const showWarning = (title: string, text: string) => {
+export const showWarning = (title: string, text: string, onOk= null) => {
     return Swal.fire({
         icon: 'warning',
         title: title,
         text: text,
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
     });
 };
 

@@ -13,7 +13,7 @@ export default class UserAPI {
 
     static async login(data: FieldValues): Promise<AxiosResponse<any>> {
         try {
-            const response = await axios.post('http://localhost:3000/api/user/login', data);
+            const response = await axios.post('http://localhost:3000/api/user/login', data, {withCredentials: true});
             return response;
         } catch (error: any) {
             return error;

@@ -10,6 +10,7 @@ import category_route from './routes/category.route.js';
 import product_route from './routes/product.route.js';
 import { initializeApp } from "firebase/app";
 import path from 'path';
+import review_route from './routes/review.route.js';
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ const startServer = async () => {
     console.log('Database synchronized');
 
     // Middleware
-    app.use(cors());
+    app.use(cors({credentials: true}));
     app.use(express.json({ limit: '10mb' }));
     app.use(cookieParser());
 
@@ -46,6 +47,7 @@ const startServer = async () => {
     app.use('/api/brand', brand_route);
     app.use('/api/category', category_route);
     app.use('/api/product', product_route);
+    app.use('/api/review', review_route); 
 
     app.use(express.static(path.join(__dirname, 'client', 'dist')));
 

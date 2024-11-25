@@ -31,26 +31,28 @@ function Brand() {
     return (
         <section id="brand">
             <Container>
-                <h1 className="text-2xl font-bold text-primary mb-10">Merek</h1>
-                <div className="w-full flex items-center flex-col gap-10">
-                    {loading && (
-                        <div className="my-10">
-                            <LoadingSpinner size="20" />
-                        </div>
-                    )}
-                    {brands !== null && brands.length !== 0 && !loading && (
-                        <div className="hv-center flex gap-3 flex-wrap">
-                            {brands.map((val, index) => (
-                                <BrandCard key={index} brandName={val.name} imgUrl={val.logo_url} id={val.id} />
-                            ))}
-                        </div>
-                    )}
-                    {brands?.length === 0 && !loading && (
-                        <div className="my-10 text-center ">
-                            <p className="text-xl">Data merek tidak ditemukan.</p>
-                            <button onClick={() => fetchBrand()} className="my-2">Refresh</button>
-                        </div>
-                    )}
+                <div className="flex flex-col items-center">
+                    <h1 className="text-2xl font-bold text-primary mb-10">Merek</h1>
+                    <div className="w-full flex items-center flex-col gap-10">
+                        {loading && (
+                            <div className="my-10">
+                                <LoadingSpinner size="20" />
+                            </div>
+                        )}
+                        {brands !== null && brands.length !== 0 && !loading && (
+                            <div className="hv-center flex gap-3 flex-wrap">
+                                {brands.map((val, index) => (
+                                    <BrandCard key={index} brandName={val.name} imgUrl={val.logo_url} id={val.id} />
+                                ))}
+                            </div>
+                        )}
+                        {brands?.length === 0 && !loading && (
+                            <div className="my-10 text-center ">
+                                <p className="text-xl">Data merek tidak ditemukan.</p>
+                                <button onClick={() => fetchBrand()} className="my-2">Refresh</button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </Container>
         </section>

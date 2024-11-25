@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductModel } from '../../model/product';
-import {Button} from 'antd';
+import { Button } from 'antd';
 interface ProductCardProps {
     product: ProductModel;
     onEdit: (product: ProductModel) => void; // Fungsi untuk mengedit produk
@@ -14,9 +14,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onEdit, onDelete }) 
                 <img className="object-cover  h-60 mx-auto" src={product.pictures[0]?.imageUrl} alt={product.name} />
             </div>
             <div className="mt-4 px-5 pb-5">
-                <a key={product.id} href="#">
-                    <h5 className="text-xl tracking-tight text-slate-900">{product.name}</h5>
-                </a>
+                <h5 className="text-xl font-semibold tracking-tight text-slate-900">{product.name}</h5>
+                <p className='mt-1'>{product.formattedPrice()}</p>
                 <p className="mt-2 text-sm text-slate-900">{product.brand.name}</p> {/* Menampilkan merek */}
                 <div className="mt-2 mb-5 flex items-center justify-between">
                     <div className="flex items-center">

@@ -11,6 +11,7 @@ export class ProductModel {
     category: Category;
     specifications: ProductSpecification[];
     pictures: ProductImage[];
+    price: number;
 
     constructor(data: any) {
         this.id = data.id;
@@ -20,8 +21,12 @@ export class ProductModel {
         this.category = new Category(data.category);
         this.specifications = data.specifications.map((spec: any) => new ProductSpecification(spec));
         this.pictures = data.pictures.map((pic: any) => new ProductImage(pic));
+        this.price = data.price;
     }
 
+    formattedPrice(): string {
+        return `IDR ${new Intl.NumberFormat('id-ID').format(this.price)}`;
+    }
 
     // Mengubah gambar berdasarkan indeks
     changeImage(index: number, url: string): void {

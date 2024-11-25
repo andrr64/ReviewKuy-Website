@@ -15,6 +15,8 @@ import axios from "axios";
 import { Button } from "antd";
 import { CategoryAPI } from "../../../api/category";
 import { SpecificationOptAPI } from "../../../api/product.specification.option";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../../state/loading/loadingSlicer";
 
 // Fungsi untuk form registrasi produk
 export default function ProductRegistrationForm() {
@@ -32,6 +34,8 @@ export default function ProductRegistrationForm() {
     const [description, setDescription] = useState(""); // State untuk deskripsi produk
     const [selectedBrand, setSelectedBrand] = useState<number | null>(null); // State untuk merek yang dipilih
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null); // State untuk kategori yang dipilih
+    const [price, setPrice] = useState<number>(0);
+    const dispatch = useDispatch();
 
     // Fungsi untuk menambah baris spesifikasi baru
     const handleAddSpecification = () => {
@@ -97,6 +101,7 @@ export default function ProductRegistrationForm() {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        dispatch(setLoading(true));
         try {
             // Fungsi untuk mengubah file menjadi Base64
             const toBase64 = (file: File) => {
@@ -135,6 +140,7 @@ export default function ProductRegistrationForm() {
                 brand_id: selectedBrand,
                 category_id: selectedCategory,
                 specification_data,
+                price,
                 pictures
             };
 
@@ -150,6 +156,8 @@ export default function ProductRegistrationForm() {
 
             await showFailed('Error', error.response.data.message);
             return;
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 
@@ -167,6 +175,18 @@ export default function ProductRegistrationForm() {
                         className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none"
                     />
                 </div>
+
+                <div>
+                    <label className="block text-gray-800 font-medium">Harga</label>
+                    <input
+                        type="number"
+                        placeholder="Masukkan harga produk"
+                        value={price}
+                        onChange={(e) => setPrice(Number(e.target.value))} // Konversi string ke number
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-slate-600 focus:outline-none"
+                    />
+                </div>
+
 
                 <div>
                     <label className="block text-gray-800 font-medium">Deskripsi</label>

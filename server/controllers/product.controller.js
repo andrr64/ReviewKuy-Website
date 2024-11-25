@@ -8,6 +8,7 @@ import ProductImage from "../models/product.image.model.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"; // Tambahkan Firebase Storage
 import { firebaseApp } from "../index.js";
 import { Op } from "sequelize";
+import ProductSpecificationOptionModel from "../models/product.specification.option.model.js";
 
 // Fungsi untuk meng-upload file yang di-decode dari base64 ke Firebase
 const uploadToFirebase = async (base64, fileName) => {
@@ -45,9 +46,9 @@ const deleteFromFirebase = async (fileName) => {
 export const createProduct = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
-        const { name, description, brand_id, category_id, specification_data, pictures } = req.body;
+        const { name, description, brand_id, category_id, specification_data, pictures, price } = req.body;
 
-        if (!name || !brand_id || !category_id || !specification_data || !pictures) {
+        if (!name || !brand_id || !category_id || !specification_data || !pictures || !price) {
             return serverBadRequest(res, 'All fields are required.');
         }
 
@@ -56,7 +57,7 @@ export const createProduct = async (req, res) => {
             return serverConflict(res, 'Product already exists');
         }
 
-        const newProduct = await Product.create({ name, description, brand_id, category_id }, { transaction });
+        const newProduct = await Product.create({ name, description, brand_id, category_id, price}, { transaction });
 
         for (const spec of specification_data) {
             await ProductSpecification.create({ product_id: newProduct.id, ...spec }, { transaction });
@@ -97,16 +98,25 @@ export const getProducts = async (req, res) => {
         const formattedProducts = await Promise.all(products.map(async (product) => {
             const specifications = await ProductSpecification.findAll({
                 where: { product_id: product.id },
-                order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
+                order: [['index', 'ASC']] // Urutkan berdasarkan index secara ascending
             });
 
             const pictures = await ProductImage.findAll({
                 where: { product_id: product.id },
-                order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
+                order: [['index', 'ASC']] // Urutkan berdasarkan index secara ascending
             });
 
             const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
             const category = await Category.findOne({ where: { id: product.category_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
+
+            const specDetails = await Promise.all(specifications.map(async (spec) => {
+                const option = await ProductSpecificationOptionModel.findByPk(spec.spec_opt_id);
+                return {
+                    spec_opt_id: spec.spec_opt_id,
+                    value: spec.value,
+                    name: option?.name || null, // Tambahkan pengecekan null untuk keamanan
+                };
+            }));
 
             return {
                 id: product.id,
@@ -114,11 +124,9 @@ export const getProducts = async (req, res) => {
                 description: product.description,
                 brand: brand,
                 category: category,
-                specifications: specifications.map(spec => ({
-                    spec_opt_id: spec.spec_opt_id,
-                    value: spec.value,
-                })),
-                pictures: pictures.map(pic => pic.image_url),
+                price: product.price,
+                specifications: specDetails,
+                pictures: pictures.map((pic) => pic.image_url),
             };
         }));
 
@@ -128,6 +136,7 @@ export const getProducts = async (req, res) => {
         return res.status(500).json({ message: 'Failed to retrieve products' });
     }
 };
+
 
 export const getProductById = async (req, res) => {
     try {
@@ -143,12 +152,21 @@ export const getProductById = async (req, res) => {
 
         const specifications = await ProductSpecification.findAll({
             where: { product_id: product.id },
-            order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
+            order: [['index', 'ASC']]
         });
+
+        const specDetails = await Promise.all(specifications.map(async (spec) => {
+            const option = await ProductSpecificationOptionModel.findByPk(spec.spec_opt_id);
+            return {
+                spec_opt_id: spec.spec_opt_id,
+                value: spec.value,
+                name: option?.name || null, // Fallback jika `option` tidak ditemukan
+            };
+        }));
 
         const pictures = await ProductImage.findAll({
             where: { product_id: product.id },
-            order: [['index', 'ASC']] // Urutkan berdasarkan id secara ascending
+            order: [['index', 'ASC']]
         });
 
         const brand = await Brand.findOne({ where: { id: product.brand_id }, attributes: { exclude: ['createdAt', 'updatedAt'] } });
@@ -158,12 +176,10 @@ export const getProductById = async (req, res) => {
             id: product.id,
             name: product.name,
             description: product.description,
-            brand: brand,
-            category: category,
-            specifications: specifications.map(spec => ({
-                spec_opt_id: spec.spec_opt_id,
-                value: spec.value,
-            })),
+            brand,
+            category,
+            price: product.price,
+            specifications: specDetails,
             pictures: pictures.map(pic => pic.image_url),
         };
 
@@ -174,16 +190,25 @@ export const getProductById = async (req, res) => {
     }
 };
 
+
 export const getProductByCategory = async (req, res) => {
     try {
         const { id } = req.params;
         const products = await Product.findAll({ where: { category_id: id } });
 
-        // Mengambil spesifikasi, gambar, brand, dan category untuk setiap produk
         const formattedProducts = await Promise.all(products.map(async (product) => {
             const specifications = await ProductSpecification.findAll({
                 where: { product_id: product.id },
             });
+
+            const specDetails = await Promise.all(specifications.map(async (spec) => {
+                const option = await ProductSpecificationOptionModel.findByPk(spec.spec_opt_id);
+                return {
+                    spec_opt_id: spec.spec_opt_id,
+                    value: spec.value,
+                    name: option?.name || null, // Fallback jika `option` tidak ditemukan
+                };
+            }));
 
             const pictures = await ProductImage.findAll({
                 where: { product_id: product.id },
@@ -196,12 +221,10 @@ export const getProductByCategory = async (req, res) => {
                 id: product.id,
                 name: product.name,
                 description: product.description,
-                brand: brand,
-                category: category,
-                specifications: specifications.map(spec => ({
-                    name: spec.name,
-                    value: spec.value,
-                })),
+                brand,
+                category,
+                price: product.price,
+                specifications: specDetails,
                 pictures: pictures.map(pic => pic.image_url),
             };
         }));
@@ -213,16 +236,25 @@ export const getProductByCategory = async (req, res) => {
     }
 };
 
+
 export const getProductByBrand = async (req, res) => {
     try {
         const { id } = req.params;
         const products = await Product.findAll({ where: { brand_id: id } });
 
-        // Mengambil spesifikasi, gambar, brand, dan category untuk setiap produk
         const formattedProducts = await Promise.all(products.map(async (product) => {
             const specifications = await ProductSpecification.findAll({
                 where: { product_id: product.id },
             });
+
+            const specDetails = await Promise.all(specifications.map(async (spec) => {
+                const option = await ProductSpecificationOptionModel.findByPk(spec.spec_opt_id);
+                return {
+                    spec_opt_id: spec.spec_opt_id,
+                    value: spec.value,
+                    name: option?.name || null, // Fallback jika `option` tidak ditemukan
+                };
+            }));
 
             const pictures = await ProductImage.findAll({
                 where: { product_id: product.id },
@@ -235,12 +267,10 @@ export const getProductByBrand = async (req, res) => {
                 id: product.id,
                 name: product.name,
                 description: product.description,
-                brand: brand,
-                category: category,
-                specifications: specifications.map(spec => ({
-                    name: spec.name,
-                    value: spec.value,
-                })),
+                brand,
+                category,
+                price: product.price,
+                specifications: specDetails,
                 pictures: pictures.map(pic => pic.image_url),
             };
         }));
@@ -259,7 +289,7 @@ export const updateProduct = async (req, res) => {
         const { id } = req.params;
         const {
             name, description, brand_id, category_id, specification_data,
-            pictures, new_thumbnail_base64, new_galery_base64
+            pictures, new_thumbnail_base64, price, new_galery_base64
         } = req.body;
 
         if (!name && !description && !brand_id && !category_id && !specification_data && !pictures) {
@@ -272,7 +302,7 @@ export const updateProduct = async (req, res) => {
         }
 
         await Product.update({
-            name, description, brand_id, category_id
+            name, description, brand_id, category_id, price
         }, {
             where: { id },
             transaction
@@ -314,28 +344,28 @@ export const updateProduct = async (req, res) => {
         }
 
         // // Update galeri gambar
-        // if (new_galery_base64) {
-        //     await ProductImage.destroy({
-        //         where: { product_id: id, index: { [Op.ne]: 0 } },
-        //         transaction
-        //     });
+        if (new_galery_base64) {
+            await ProductImage.destroy({
+                where: { product_id: id, index: { [Op.ne]: 0 } },
+                transaction
+            });
 
-        //     for (const [index, pict] of new_galery_base64.entries()) {
-        //         const fileName = `${id}_image_${index + 1}`;
-        //         await deleteFromFirebase(fileName); // Hapus file lama
-        //         const imageUrl = await uploadToFirebase(pict, fileName); // Unggah file baru
-
-        //         await ProductImage.create({
-        //             product_id: id,
-        //             index: index + 1,
-        //             image_url: imageUrl
-        //         }, { transaction });
-        //     }
-        // }
+            for (const [index, pict] of new_galery_base64.entries()) {
+                const fileName = `${id}_image_${index + 1}`;
+                await deleteFromFirebase(fileName); // Hapus file lama
+                const imageUrl = await uploadToFirebase(pict, fileName); // Unggah file baru
+                await ProductImage.create({
+                    product_id: id,
+                    index: index + 1,
+                    image_url: imageUrl
+                }, { transaction });
+            }
+        }
         await transaction.commit();
         return serverSuccess(res, 'Product updated successfully');
     } catch (error) {
         await transaction.rollback();
+        console.log(error);
         return serverError(res, 'Failed to update product');
     }
 };
@@ -397,7 +427,7 @@ export const searchProduct = async (req, res) => {
             }
         });
         console.log(products);
-        
+
         // Format hasil pencarian untuk setiap produk
         const formattedProducts = await Promise.all(products.map(async (product) => {
             const specifications = await ProductSpecification.findAll({

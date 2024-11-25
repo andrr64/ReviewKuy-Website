@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoogleLogo } from '../../../assets/import';
-import UserAPI from '../../../api/user.api';
 import { showAlertByResponseCode } from '../../../util/alert/alert';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../state/user/userState';
+import axios from 'axios';
 interface FormLoginProps {
     closeCallback: () => void;
     regCallback: () => void;
@@ -19,12 +19,16 @@ export default function FormLogin({closeCallback, regCallback }: FormLoginProps)
     // React Hook Form
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = async (data: FieldValues) => {
-        const response = await UserAPI.login(data);
-        if (response.status === 200) {
-            dispatch(login(response.data)); // Pastikan login dipanggil dengan dispatch
-            closeCallback();
-        } 
-        showAlertByResponseCode(response.status);
+        try {
+            const response = await axios.post('/api/user/login', data, {withCredentials: true});
+            if (response.status === 200) {
+                dispatch(login(response.data)); // Pastikan login dipanggil dengan dispatch
+                closeCallback();
+            } 
+            showAlertByResponseCode(response.status);
+        } catch (error: any) {
+            return error;
+        }
     };
 
     // Function untuk toggle password visibility

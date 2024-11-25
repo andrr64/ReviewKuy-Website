@@ -42,31 +42,27 @@ export const verifyAdmin = (req, res, next) => {
 // Middleware untuk memverifikasi accessToken dan mengecek refreshToken jika accessToken tidak valid
 export const verifyAccessToken = (req, res, next) => {
     let accessToken = req.cookies.accessToken;
-
     if (!accessToken) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
         return serverUnauthorized(res, 'Unauthorized.');
     }
-
     jwt.verify(accessToken, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             const refreshToken = req.cookies.refreshToken;
-
             if (!refreshToken) {
                 res.clearCookie('accessToken');
                 res.clearCookie('refreshToken');
                 return serverUnauthorized(res, 'Invalid or expired token.');
             }
-
             // Verifikasi refreshToken untuk mendapatkan accessToken baru
             jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (refreshErr, refreshDecoded) => {
                 if (refreshErr) {
                     res.clearCookie('refreshToken');
                     return serverUnauthorized(res, 'Invalid or expired token.');
                 }
-
                 // Buat accessToken baru jika refreshToken valid
                 accessToken = jwt.sign({ id: refreshDecoded.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-
                 // Simpan accessToken baru di cookie
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,

@@ -1,6 +1,10 @@
 export const serverBadRequest = (res, message) => 
     res.status(400).json({message });
 
+export const serverbadrequest = (res, data) => {
+    return res.status(400).send(data);
+}
+
 export const serverConflict = (res, message) => 
     res.status(409).json({ message });
 

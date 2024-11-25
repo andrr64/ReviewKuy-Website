@@ -29,16 +29,18 @@ function Category() {
   return (
     <section id="category">
       <Container>
-        <h1 className="title text-primary mb-10">Kategori</h1>
-        <div className="flex gap-5">
-          {loading && (<LoadingSpinner size="20" />)}
-          {categories !== null && categories.length !== 0 && (
-            <>
-              {categories.map((data, i) => {
-                return <CategoryCard key={i} data={data} />
-              })}
-            </>
-          )}
+        <div className="flex flex-col items-center">
+          <h1 className="title text-primary mb-10">Kategori</h1>
+          <div className="flex gap-5">
+            {loading && (<LoadingSpinner size="20" />)}
+            {categories !== null && categories.length !== 0 && (
+              <>
+                {categories.map((data, i) => {
+                  return <CategoryCard key={i} data={data} />
+                })}
+              </>
+            )}
+          </div>
         </div>
       </Container>
     </section>

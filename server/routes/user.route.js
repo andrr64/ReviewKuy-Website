@@ -5,7 +5,7 @@ import feature_route from './user.feature.route.js';
 
 const user_route = express.Router();
 
-user_route.post('/', createUser);
+user_route.post('/', createUser);   
 user_route.post('/login', loginUser);
 user_route.post('/logout', logoutUser);
 
